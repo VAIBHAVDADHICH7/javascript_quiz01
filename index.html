@@ -1,0 +1,3620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaScript Mastery Quiz: 100 Practical Coding Challenges</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card-bg: #161b22;
+      --panel-bg: #21262d;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --text-bright: #f0f6fc;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --accent-glow: rgba(88, 166, 255, 0.15);
+      --success: #3fb950;
+      --success-glow: rgba(63, 185, 80, 0.2);
+      --danger: #f85149;
+      --danger-glow: rgba(248, 81, 73, 0.2);
+      --warning: #d29922;
+      --code-bg: #090d13;
+      --font-code: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 60px;
+    }
+
+    header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-logo {
+      background: #f7df1e;
+      color: #000;
+      font-weight: 900;
+      font-size: 1.2rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+    .brand h1 {
+      font-size: 1.25rem;
+      color: var(--text-bright);
+    }
+    .brand p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      color: var(--text-bright);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn:hover { background: #30363d; border-color: #8b949e; }
+    .btn-primary { background: #238636; border-color: #2ea043; color: #fff; }
+    .btn-primary:hover { background: #2ea043; }
+    .btn-accent { background: #1f6feb; border-color: #388bfd; color: #fff; }
+    .btn-accent:hover { background: #388bfd; }
+
+    .main-layout {
+      max-width: 1400px;
+      margin: 20px auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .main-layout { grid-template-columns: 1fr; }
+    }
+
+    /* Sidebar */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .card-title {
+      font-size: 0.95rem;
+      color: var(--text-bright);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .stat-box {
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      text-align: center;
+    }
+    .stat-val { font-size: 1.2rem; font-weight: 700; color: var(--text-bright); }
+    .stat-label { font-size: 0.75rem; color: var(--text-muted); }
+
+    .progress-track {
+      background: var(--panel-bg);
+      border-radius: 10px;
+      height: 8px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    .progress-fill {
+      background: linear-gradient(90deg, #58a6ff, #3fb950);
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .filter-group {
+      margin-bottom: 12px;
+    }
+    .filter-group label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    select, input[type="text"] {
+      width: 100%;
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      color: var(--text-bright);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+    select:focus, input[type="text"]:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    /* 100 Question Grid */
+    .question-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      max-height: 380px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .grid-btn {
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.75rem;
+      padding: 6px 0;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+    .grid-btn:hover { border-color: var(--accent); color: var(--text-bright); }
+    .grid-btn.active { border-color: var(--accent); background: var(--accent-glow); color: var(--accent); font-weight: bold; }
+    .grid-btn.correct { background: var(--success-glow); border-color: var(--success); color: var(--success); }
+    .grid-btn.incorrect { background: var(--danger-glow); border-color: var(--danger); color: var(--danger); }
+    .grid-btn.bookmarked::after {
+      content: " ★";
+      color: var(--warning);
+    }
+
+    /* Content Area */
+    .content-area {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .q-meta {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .badge {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+    .badge-topic { background: rgba(88, 166, 255, 0.15); color: #58a6ff; border: 1px solid rgba(88, 166, 255, 0.3); }
+    .badge-diff-easy { background: rgba(63, 185, 80, 0.15); color: #3fb950; border: 1px solid rgba(63, 185, 80, 0.3); }
+    .badge-diff-medium { background: rgba(210, 153, 34, 0.15); color: #d29922; border: 1px solid rgba(210, 153, 34, 0.3); }
+    .badge-diff-hard { background: rgba(248, 81, 73, 0.15); color: #f85149; border: 1px solid rgba(248, 81, 73, 0.3); }
+    .badge-diff-expert { background: rgba(163, 113, 247, 0.15); color: #a371f7; border: 1px solid rgba(163, 113, 247, 0.3); }
+
+    .q-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 12px;
+    }
+
+    /* Code Block */
+    .code-container {
+      position: relative;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+    }
+    pre code {
+      font-family: var(--font-code);
+      font-size: 0.9rem;
+      color: #e6edf3;
+      white-space: pre-wrap;
+    }
+    .code-actions {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      display: flex;
+      gap: 6px;
+    }
+    .mini-btn {
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .mini-btn:hover { color: var(--text-bright); border-color: var(--accent); }
+
+    /* Sandbox Console Box */
+    .console-output {
+      display: none;
+      background: #040d21;
+      border: 1px solid #1f6feb;
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 16px;
+      font-family: var(--font-code);
+      font-size: 0.82rem;
+      color: #79c0ff;
+    }
+
+    /* Options */
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .option-item {
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      transition: all 0.15s ease;
+    }
+    .option-item:hover {
+      background: #282e37;
+      border-color: #8b949e;
+    }
+    .option-radio {
+      margin-top: 3px;
+    }
+    .option-text {
+      font-size: 0.92rem;
+      color: var(--text-bright);
+      font-family: var(--font-code);
+    }
+    .option-item.selected {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+    }
+    .option-item.correct {
+      border-color: var(--success);
+      background: var(--success-glow);
+    }
+    .option-item.incorrect {
+      border-color: var(--danger);
+      background: var(--danger-glow);
+    }
+
+    /* Explanation Box */
+    .explanation-box {
+      display: none;
+      background: rgba(56, 139, 253, 0.1);
+      border: 1px solid #388bfd;
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-top: 16px;
+    }
+    .explanation-box h4 {
+      color: #58a6ff;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+    .explanation-box p {
+      font-size: 0.88rem;
+      color: var(--text-bright);
+      margin-bottom: 8px;
+    }
+    .explanation-box pre {
+      background: var(--code-bg);
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      overflow-x: auto;
+      margin-top: 6px;
+    }
+
+    .nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    /* Results Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 650px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px;
+    }
+    .modal-card h2 {
+      color: var(--text-bright);
+      margin-bottom: 12px;
+      font-size: 1.4rem;
+    }
+    .breakdown-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.85rem;
+    }
+    .breakdown-table th, .breakdown-table td {
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      text-align: left;
+    }
+    .breakdown-table th { background: var(--panel-bg); color: var(--text-bright); }
+
+    /* Professional Sync & Auth UI */
+    .badge-sync {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-weight: 500;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .badge-sync.synced {
+      color: var(--success);
+      border-color: rgba(63, 185, 80, 0.4);
+      background: var(--success-glow);
+    }
+    .badge-sync.syncing {
+      color: var(--accent);
+      border-color: rgba(88, 166, 255, 0.4);
+      background: var(--accent-glow);
+    }
+    .badge-sync.guest {
+      color: var(--warning);
+      border-color: rgba(210, 153, 34, 0.4);
+      background: rgba(210, 153, 34, 0.1);
+    }
+    .sync-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      display: inline-block;
+    }
+    .sync-dot.pulse {
+      animation: pulseSync 0.8s infinite alternate ease-in-out;
+    }
+    @keyframes pulseSync {
+      from { opacity: 0.3; transform: scale(0.85); }
+      to { opacity: 1; transform: scale(1.15); }
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 3px 12px 3px 4px;
+      font-size: 0.84rem;
+      color: var(--text-bright);
+    }
+    .user-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1f6feb, #238636);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+
+    /* Tabs */
+    .tab-container {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+      gap: 12px;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .tab-btn:hover { color: var(--text-bright); }
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* Form controls */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .form-input {
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      color: var(--text-bright);
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .form-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .form-error {
+      background: rgba(248, 81, 73, 0.1);
+      border: 1px solid var(--danger);
+      color: #ff7b72;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      margin-bottom: 14px;
+      display: none;
+    }
+    .form-banner {
+      background: rgba(56, 139, 253, 0.08);
+      border: 1px solid rgba(56, 139, 253, 0.3);
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      color: #79c0ff;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    /* Toast Notifications */
+    #toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 9999;
+      pointer-events: none;
+    }
+    .toast {
+      background: #1c2128;
+      border: 1px solid var(--border);
+      color: var(--text-bright);
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: slideIn 0.25s ease-out;
+      pointer-events: auto;
+    }
+    /* Auth Portal Gate Screen */
+    #auth-portal-screen {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 20px;
+      background: radial-gradient(circle at 50% 20%, #151b23 0%, #0d1117 80%);
+    }
+    .auth-portal-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .auth-portal-header .brand-logo {
+      font-size: 2.2rem;
+      padding: 6px 14px;
+      display: inline-block;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 20px rgba(247, 223, 30, 0.2);
+    }
+    .auth-portal-header h1 {
+      font-size: 1.85rem;
+      color: var(--text-bright);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    .auth-portal-header p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+    .auth-portal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 460px;
+      padding: 28px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      border-top: 3px solid var(--accent);
+    }
+    .auth-feature-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+      max-width: 600px;
+    }
+    .auth-feature-pill {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .auth-feature-pill span {
+      color: var(--accent);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<!-- =========================================================================
+     MANDATORY AUTHENTICATION PORTAL (PRE-QUIZ GATE)
+     ========================================================================= -->
+<div id="auth-portal-screen">
+  <div class="auth-portal-header">
+    <div class="brand-logo">JS</div>
+    <h1>JavaScript Mastery Assessment</h1>
+    <p>Candidate Portal & Proctoring Gateway</p>
+  </div>
+
+  <div class="auth-portal-card">
+    <div class="tab-container" style="justify-content: center;">
+      <button class="tab-btn active" id="portal-tab-login" onclick="switchPortalTab('login')">Sign In</button>
+      <button class="tab-btn" id="portal-tab-register" onclick="switchPortalTab('register')">Register Account</button>
+    </div>
+
+    <div class="form-banner">
+      🔒 <strong>Authentication Required:</strong> Please sign in or register to access the 100 questions. All responses and completion metrics are automatically persisted to the database.
+    </div>
+
+    <div id="portal-error-box" class="form-error"></div>
+
+    <!-- Login Form -->
+    <form id="portal-login-form" onsubmit="handlePortalLogin(event)">
+      <div class="form-group">
+        <label for="portal-login-email">Email Address</label>
+        <input type="email" id="portal-login-email" class="form-input" placeholder="candidate@example.com" required autofocus>
+      </div>
+      <div class="form-group">
+        <label for="portal-login-password">Password</label>
+        <input type="password" id="portal-login-password" class="form-input" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn btn-accent" style="width: 100%; justify-content: center; padding: 11px; margin-top: 8px; font-size: 0.95rem;">
+        Sign In & Access Assessment →
+      </button>
+      <div style="text-align: center; margin-top: 14px; font-size: 0.84rem; color: var(--text-muted);">
+        Don't have an account? <a href="javascript:void(0)" onclick="switchPortalTab('register')" style="color: var(--accent); text-decoration: none; font-weight: 600;">Register here</a>
+      </div>
+    </form>
+
+    <!-- Register Form -->
+    <form id="portal-register-form" style="display: none;" onsubmit="handlePortalRegister(event)">
+      <div class="form-group">
+        <label for="portal-reg-name">Full Name</label>
+        <input type="text" id="portal-reg-name" class="form-input" placeholder="e.g. Alex Johnson" required>
+      </div>
+      <div class="form-group">
+        <label for="portal-reg-email">Email Address</label>
+        <input type="email" id="portal-reg-email" class="form-input" placeholder="candidate@example.com" required>
+      </div>
+      <div class="form-group">
+        <label for="portal-reg-password">Password (min 6 characters)</label>
+        <input type="password" id="portal-reg-password" class="form-input" placeholder="••••••••" minlength="6" required>
+      </div>
+      <div class="form-group">
+        <label for="portal-reg-confirm">Confirm Password</label>
+        <input type="password" id="portal-reg-confirm" class="form-input" placeholder="••••••••" minlength="6" required>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 11px; margin-top: 8px; font-size: 0.95rem;">
+        Register & Begin Assessment →
+      </button>
+      <div style="text-align: center; margin-top: 14px; font-size: 0.84rem; color: var(--text-muted);">
+        Already registered? <a href="javascript:void(0)" onclick="switchPortalTab('login')" style="color: var(--accent); text-decoration: none; font-weight: 600;">Sign In</a>
+      </div>
+    </form>
+  </div>
+
+  <div class="auth-feature-row">
+    <div class="auth-feature-pill"><span>✓</span> 100 Practical Challenges</div>
+    <div class="auth-feature-pill"><span>✓</span> Real-Time SQLite Sync</div>
+    <div class="auth-feature-pill"><span>✓</span> Global Leaderboard</div>
+  </div>
+</div>
+
+<!-- =========================================================================
+     MAIN QUIZ APPLICATION (LOCKED UNTIL AUTHENTICATED)
+     ========================================================================= -->
+<div id="quiz-app-container" style="display: none;">
+
+<header>
+  <div class="brand">
+    <div class="brand-logo">JS</div>
+    <div>
+      <h1>JavaScript Mastery Assessment (100 Practical Questions)</h1>
+      <p>Variables, Scope, Types, Operators & Conditionals with Database Persistence</p>
+    </div>
+  </div>
+
+  <div class="header-controls">
+    <!-- Real-time Database Sync Status -->
+    <div id="db-status-badge" class="badge-sync synced" title="All responses automatically synced to SQLite">
+      <span class="sync-dot"></span>
+      <span id="sync-text">Saved to DB ✓</span>
+    </div>
+
+    <button class="btn" id="btn-mode-toggle" onclick="toggleQuizMode()">Mode: Practice (Instant)</button>
+    <button class="btn btn-accent" id="btn-bookmark" onclick="toggleCurrentBookmark()">★ Bookmark</button>
+    <button class="btn" onclick="openHistoryModal()">📋 My History</button>
+    <button class="btn" onclick="openCandidateStatsModal()">📈 My Statistics</button>
+    <button class="btn" onclick="openLeaderboardModal()">🏆 Leaderboard</button>
+    <button class="btn btn-primary" onclick="showScoreModal()">📊 Summary & Submit</button>
+    <button class="btn" onclick="resetQuiz()">↻ Reset</button>
+
+    <!-- Candidate Profile Area -->
+    <div id="auth-actions"></div>
+  </div>
+</header>
+
+<div class="main-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="card">
+      <div class="card-title">
+        <span>Your Progress</span>
+        <span id="timer-display" style="font-family: var(--font-code); color: var(--accent);">00:00</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="stats-bar">
+        <div class="stat-box">
+          <div class="stat-val" id="stat-answered">0/100</div>
+          <div class="stat-label">Answered</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="stat-score" style="color: var(--success);">0%</div>
+          <div class="stat-label">Accuracy</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Filter Questions</div>
+      <div class="filter-group">
+        <label>Topic</label>
+        <select id="filter-topic" onchange="applyFilters()">
+          <option value="all">All Topics (100)</option>
+          <option value="variables">1. Variables & Scope (20)</option>
+          <option value="let-var-const">2. let, var, const (20)</option>
+          <option value="primitives-objects">3. Primitives & Objects (20)</option>
+          <option value="operators">4. Operators & Expressions (20)</option>
+          <option value="conditionals">5. Conditional Expressions (20)</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Difficulty</label>
+        <select id="filter-diff" onchange="applyFilters()">
+          <option value="all">All Difficulties</option>
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
+          <option value="Expert">Expert</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Search Code or Topic</label>
+        <input type="text" id="filter-search" placeholder="e.g. hoisting, TDZ, NaN..." oninput="applyFilters()">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span>Question Palette</span>
+        <span style="font-size:0.75rem; color: var(--text-muted);" id="filtered-count">100 shown</span>
+      </div>
+      <div class="question-grid" id="question-grid"></div>
+    </div>
+  </aside>
+
+  <!-- Main Question Content Area -->
+  <main class="content-area">
+    <div class="card" id="question-card">
+      <div class="question-header">
+        <div class="q-meta">
+          <span style="font-weight: 700; color: var(--text-bright);" id="q-number">Question #1</span>
+          <span class="badge badge-topic" id="q-topic">Variables & Scope</span>
+          <span class="badge badge-diff-easy" id="q-diff">Easy</span>
+        </div>
+      </div>
+
+      <div class="q-title" id="q-title">What will be logged to the console?</div>
+
+      <div class="code-container">
+        <div class="code-actions">
+          <button class="mini-btn" onclick="runSandboxCode()">▶ Run Code</button>
+          <button class="mini-btn" onclick="copySnippet()">Copy</button>
+        </div>
+        <pre><code id="q-code">// Code snippet will render here</code></pre>
+      </div>
+
+      <div class="console-output" id="console-output"></div>
+
+      <div class="options-list" id="options-list"></div>
+
+      <div class="explanation-box" id="explanation-box">
+        <h4>Detailed Explanation & ECMAScript Spec Rationale</h4>
+        <div id="explanation-text"></div>
+      </div>
+
+      <div class="nav-bar">
+        <button class="btn" id="btn-prev" onclick="navigateQuestion(-1)">← Previous</button>
+        <span style="font-size: 0.85rem; color: var(--text-muted);" id="q-index-indicator">1 of 100</span>
+        <button class="btn btn-primary" id="btn-next" onclick="navigateQuestion(1)">Next →</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Score Modal -->
+<div class="modal-overlay" id="score-modal" onclick="closeModalOnOuter(event)">
+  <div class="modal-card">
+    <h2>Performance Summary</h2>
+    <p style="color: var(--text-muted); font-size: 0.9rem;">Review your score, accuracy rate, and category breakdowns.</p>
+    
+    <div class="stats-bar" style="margin-top: 16px;">
+      <div class="stat-box">
+        <div class="stat-val" id="modal-answered">0/100</div>
+        <div class="stat-label">Total Answered</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="modal-score" style="color: var(--success);">0%</div>
+        <div class="stat-label">Accuracy Rate</div>
+      </div>
+    </div>
+
+    <table class="breakdown-table">
+      <thead>
+        <tr>
+          <th>Topic</th>
+          <th>Completed</th>
+          <th>Accuracy</th>
+        </tr>
+      </thead>
+      <tbody id="breakdown-body"></tbody>
+    </table>
+
+    <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; flex-wrap: wrap;">
+      <button class="btn btn-accent" onclick="filterByIncorrect()">Review Incorrect Only</button>
+      <button class="btn btn-primary" id="btn-finalize-assessment" onclick="finalizeAssessment()">💾 Submit & Save to Database</button>
+      <button class="btn" onclick="document.getElementById('score-modal').style.display='none'">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- History & Past Attempts Modal -->
+<div class="modal-overlay" id="history-modal" onclick="closeModalOnOuter(event)">
+  <div class="modal-card" style="max-width: 750px;">
+    <h2>My Assessment History</h2>
+    <p style="color: var(--text-muted); font-size: 0.9rem;">All your quiz submissions and responses stored securely in the SQLite database.</p>
+    
+    <div id="history-content" style="margin-top: 16px;">
+      <div style="text-align: center; color: var(--text-muted); padding: 24px;">Loading your history from database...</div>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+      <button class="btn" onclick="document.getElementById('history-modal').style.display='none'">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Leaderboard Modal -->
+<div class="modal-overlay" id="leaderboard-modal" onclick="closeModalOnOuter(event)">
+  <div class="modal-card" style="max-width: 650px;">
+    <h2>🏆 Global Quiz Leaderboard</h2>
+    <p style="color: var(--text-muted); font-size: 0.9rem;">Top performers ranked by highest score and completion accuracy.</p>
+
+    <div id="leaderboard-content" style="margin-top: 16px;">
+      <div style="text-align: center; color: var(--text-muted); padding: 24px;">Loading leaderboard...</div>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+      <button class="btn" onclick="document.getElementById('leaderboard-modal').style.display='none'">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Candidate Statistics & Competency Analytics Modal -->
+<div class="modal-overlay" id="candidate-stats-modal" onclick="closeModalOnOuter(event)">
+  <div class="modal-card" style="max-width: 820px; max-height: 90vh; overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+      <div>
+        <h2 style="display: flex; align-items: center; gap: 8px; margin: 0;">
+          <span>📈</span> Candidate Performance & Analytics
+        </h2>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin: 4px 0 0 0;">Comprehensive breakdown of your topic mastery, pacing, rank, and difficulty accuracy.</p>
+      </div>
+      <button class="btn" onclick="document.getElementById('candidate-stats-modal').style.display='none'" style="padding: 4px 10px;">✕</button>
+    </div>
+
+    <div id="candidate-stats-content" style="margin-top: 16px;">
+      <div style="text-align: center; color: var(--text-muted); padding: 30px;">Loading your performance analytics...</div>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+      <button class="btn" onclick="document.getElementById('candidate-stats-modal').style.display='none'">Close</button>
+    </div>
+  </div>
+</div>
+
+</div> <!-- /#quiz-app-container -->
+
+<!-- Toast Container -->
+<div id="toast-container"></div>
+
+<script>
+/* =========================================================================
+   100 REAL JAVASCRIPT PRACTICAL CODING QUESTIONS (Full Dataset)
+   ========================================================================= */
+const questions = [
+  // TOPIC 1: VARIABLES & SCOPE (Q1 - Q20)
+  {
+    id: 1,
+    topic: "Variables & Scope",
+    topicKey: "variables",
+    diff: "Easy",
+    title: "What is the output of the following code involving an undeclared variable inside a function in non-strict mode?",
+    code: `function test() {\n  foo = 42;\n}\ntest();\nconsole.log(typeof foo, foo);`,
+    options: [
+      `"undefined" undefined`,
+      `"number" 42`,
+      `ReferenceError: foo is not defined`,
+      `"number" undefined`
+    ],
+    answer: 1,
+    explanation: `In non-strict mode, assigning to an identifier without declaration ('foo = 42') traverses up the scope chain and, when not found, attaches 'foo' as a property of the global object (window or globalThis). Therefore 'foo' is globally accessible as a number.`
+  },
+  {
+    id: 2,
+    topic: "Variables & Scope",
+    topicKey: "variables",
+    diff: "Medium",
+    title: "What is logged when a variable and a function share the same name in the same scope?",
+    code: `console.log(typeof myVar);\nvar myVar = "hello";\nfunction myVar() {}\nconsole.log(typeof myVar);`,
+    options: [
+      `"string" followed by "function"`,
+      `"undefined" followed by "string"`,
+      `"function" followed by "string"`,
+      `TypeError: myVar is not a function`
+    ],
+    answer: 2,
+    explanation: `Function declarations are hoisted before variable declarations. During compilation, 'myVar' is hoisted as a function. When execution begins, 'typeof myVar' is initially "function". Then the assignment 'myVar = "hello"' executes at runtime, converting 'myVar' to a string.`
+  },
+  {
+    id: 3,
+    topic: "Variables & Scope",
+    topicKey: "variables",
+    diff: "Medium",
+    title: "What is the output when a parameter shadows an outer variable and is shadowed by a local var?",
+    code: `var x = 10;\nfunction test(x) {\n  var x;\n  console.log(x);\n}\ntest(20);`,
+    options: [
+      `10`,
+      `undefined`,
+      `20`,
+      `ReferenceError`
+    ],
+    answer: 2,
+    explanation: `The parameter 'x' is already declared and initialized to 20 when 'test(20)' is called. The inner 'var x;' statement is a duplicate declaration without an assignment, which leaves the existing parameter value intact.`
+  },
+  {
+    id: 4,
+    topic: "Variables & Scope",
+    topicKey: "variables",
+    diff: "Hard",
+    title: "What is printed when deleting variables and object properties?",
+    code: `var a = 1;\nb = 2;\nvar obj = { c: 3 };\n\nconsole.log(delete a, delete b, delete obj.c);\nconsole.log(typeof a, typeof b, obj.c);`,
+    options: [
+      `false true true followed by "number" "undefined" undefined`,
+      `true true true followed by "undefined" "undefined" undefined`,
+      `false false true followed by "number" "number" undefined`,
+      `SyntaxError in all environments`
+    ],
+    answer: 0,
+    explanation: `Variables declared with 'var' create non-configurable properties on the global object, so 'delete a' evaluates to false and fails. Unqualified implicit globals ('b = 2') create configurable global properties, so 'delete b' succeeds (true). Object properties ('delete obj.c') are configurable by default and return true.`
+  },
+  {
+    id: 5,
+    topic: "Variables & Scope",
+    topicKey: "variables",
+    diff: "Hard",
+    title: "What is the value of 'x' inside and outside this block in ES6+?",
+    code: `var x = 1;\nif (true) {\n  function x() {}\n  x = 2;\n  console.log(typeof x);\n}\nconsole.log(typeof x);`,
+    options: [
+      `"number" followed by "function"`,
+      `"number" followed by "number"`,
+      `"function" followed by "number"`,
+      `"number" followed by "undefined"`
+    ],
+    answer: 0,
+    explanation: `Under ES6 Annex B (web compatibility semantics), block-scoped function declarations hoist their name to the outer function/global scope, but the block retains its own binding. The assignment 'x = 2' modifies the block's 'x', while the outer 'x' received the function pointer.`
+  },
+  {
+    id: 6,
+    topic: "Variables & Scope",
+    topicKey: "variables",
+    diff: "Easy",
+    title: "What does this code output regarding variable hoisting inside an unreachable branch?",
+    code: `console.log(x);\nif (false) {\n  var x = 100;\n}\nconsole.log(x);`,
+    options: [
+      `ReferenceError: x is not defined`,
+      `undefined followed by undefined`,
+      `undefined followed by 100`,
+      `null followed by null`
+    ],
+    answer: 1,
+    explanation: `'var' declarations are hoisted to the enclosing function/global scope regardless of block conditions. Because the 'if' block is never entered, 'x' remains initialized to its default value 'undefined'.`
+  },
+  {
+    id: 7,
+    topic: "Variables & Scope",
+    topicKey: "variables",
+    diff: "Medium",
+    title: "What does this Named Function Expression (NFE) log inside and outside its body?",
+    code: `var f = function myFunc() {\n  console.log(typeof myFunc);\n};\nf();\nconsole.log(typeof myFunc);`,
+    options: [
+      `"function" followed by "function"`,
+      `"function" followed by "undefined"`,
+      `"undefined" followed by "undefined"`,
+      `ReferenceError inside f()`
+    ],
+    answer: 1,
+    explanation: `A Named Function Expression binds its identifier ('myFunc') only within its own function body scope (making it useful for recursion). It is not added to the enclosing scope.`
+  },
+  {
+    id: 8,
+    topic: "Variables & Scope",
+    topicKey: "variables",
+    diff: "Medium",
+    title: "What will the following code output regarding the 'arguments' object in non-strict mode?",
+    code: `function foo(a) {\n  arguments[0] = 99;\n  console.log(a);\n}\nfoo(10);`,
+    options: [
+      `10`,
+      `99`,
+      `undefined`,
+      `TypeError`
+    ],
+    answer: 1,
+    explanation: `In non-strict mode, when a function has simple parameters, the 'arguments' object elements are dynamically linked/aliased to the named formal parameters. Changing arguments[0] directly updates 'a'.`
+  },
+  {
+    id: 9,
+    topic: "Variables & Scope",
+    topicKey: "variables",
+    diff: "Hard",
+    title: "What is logged when 'eval' declares a variable in strict mode vs non-strict mode?",
+    code: `function run() {\n  "use strict";\n  eval("var secret = 42;");\n  console.log(typeof secret);\n}\nrun();`,
+    options: [
+      `"number"`,
+      `"undefined"`,
+      `SyntaxError`,
+      `"string"`
+    ],
+    answer: 1,
+    explanation: `In strict mode ('"use strict"'), 'eval' creates its own isolated lexical scope. Variables declared with 'var' inside strict 'eval' do not leak into the enclosing scope, so 'secret' remains undefined in 'run()'.`
+  },
+  {
+    id: 10,
+    topic: "Variables & Scope",
+    topicKey: "variables",
+    diff: "Expert",
+    title: "What will this IIFE with parameter defaults and local shadowing output?",
+    code: `var a = 1;\n(function(a = a) {\n  console.log(a);\n})();`,
+    options: [
+      `1`,
+      `undefined`,
+      `ReferenceError: Cannot access 'a' before initialization`,
+      `null`
+    ],
+    answer: 2,
+    explanation: `Default parameter expressions evaluate in an intermediate scope between the outer scope and function body. In 'a = a', the right-hand side refers to the parameter 'a' itself (not the outer 'var a'), triggering the Temporal Dead Zone (TDZ) ReferenceError.`
+  },
+  {
+    id: 11,
+    topic: "Variables & Scope",
+    topicKey: "variables",
+    diff: "Easy",
+    title: "What is logged when accessing an uninitialized global 'var'?",
+    code: `console.log(name);\nvar name = "Alice";`,
+    options: [
+      `ReferenceError`,
+      `"" (empty string) in browser or undefined`,
+      `"Alice"`,
+      `null`
+    ],
+    answer: 1,
+    explanation: `In standard Node.js environments it logs 'undefined' due to hoisting. In browsers, 'window.name' is a pre-existing string property, so uninitialized 'var name' is coerced or resets to "". Either way, it never throws a ReferenceError.`
+  },
+  {
+    id: 12,
+    topic: "Variables & Scope",
+    topicKey: "variables",
+    diff: "Medium",
+    title: "What happens when destructuring with default values encountering undefined vs null?",
+    code: `var { x = 5, y = 10 } = { x: undefined, y: null };\nconsole.log(x, y);`,
+    options: [
+      `5 10`,
+      `5 null`,
+      `undefined null`,
+      `5 0`
+    ],
+    answer: 1,
+    explanation: `Default values in destructuring only trigger when the property value is strictly 'undefined'. Since 'y' is explicitly 'null', the default 10 is NOT applied and 'y' remains null.`
+  },
+  {
+    id: 13,
+    topic: "Variables & Scope",
+    topicKey: "variables",
+    diff: "Hard",
+    title: "What is the output of multiple variable declarations in one line?",
+    code: `(function() {\n  var a = b = 3;\n})();\nconsole.log(typeof a, typeof b);`,
+    options: [
+      `"undefined" "number"`,
+      `"number" "number"`,
+      `"undefined" "undefined"`,
+      `ReferenceError`
+    ],
+    answer: 0,
+    explanation: `'var a = b = 3;' evaluates right-to-left as 'b = 3; var a = b;'. 'b' is not declared with 'var', creating an accidental global variable in non-strict mode. 'a' is local to the function.`
+  },
+  {
+    id: 14,
+    topic: "Variables & Scope",
+    topicKey: "variables",
+    diff: "Easy",
+    title: "What is the scope of a variable declared inside a for loop with 'var'?",
+    code: `for (var i = 0; i < 3; i++) {}\nconsole.log(i);`,
+    options: [
+      `ReferenceError: i is not defined`,
+      `2`,
+      `3`,
+      `undefined`
+    ],
+    answer: 2,
+    explanation: `'var' does not have block scope. The variable 'i' is hoisted to the enclosing function or global scope and increments until the loop terminates at 'i = 3'.`
+  },
+  {
+    id: 15,
+    topic: "Variables & Scope",
+    topicKey: "variables",
+    diff: "Medium",
+    title: "What is logged when a function expression is reassigned inside its body?",
+    code: `var fn = function() {\n  console.log(typeof fn);\n  fn = 10;\n  console.log(typeof fn);\n};\nfn();\nconsole.log(typeof fn);`,
+    options: [
+      `"function" "function" "function"`,
+      `"function" "number" "number"`,
+      `TypeError: Assignment to constant variable`,
+      `"undefined" "number" "number"`
+    ],
+    answer: 1,
+    explanation: `'fn' is a mutable variable declared with 'var' in the outer scope. Inside the function, assigning 'fn = 10' reassigns that outer variable.`
+  },
+  {
+    id: 16,
+    topic: "Variables & Scope",
+    topicKey: "variables",
+    diff: "Hard",
+    title: "What is the value of 'result' when closures access a shadowed variable?",
+    code: `var x = "outer";\nfunction parent() {\n  var x = "inner";\n  return function() {\n    return x;\n  };\n}\nvar child = parent();\nvar x = "global";\nconsole.log(child());`,
+    options: [
+      `"global"`,
+      `"outer"`,
+      `"inner"`,
+      `undefined`
+    ],
+    answer: 2,
+    explanation: `JavaScript uses static (lexical) scoping. The closure preserves a reference to the lexical environment where it was declared, which is the local scope of 'parent()' where x is "inner".`
+  },
+  {
+    id: 17,
+    topic: "Variables & Scope",
+    topicKey: "variables",
+    diff: "Medium",
+    title: "What does this code output regarding variable declarations with no initialization vs assigned ones?",
+    code: `var a = 1;\nvar a;\nconsole.log(a);`,
+    options: [
+      `undefined`,
+      `1`,
+      `SyntaxError: Identifier 'a' has already been declared`,
+      `TypeError`
+    ],
+    answer: 1,
+    explanation: `Duplicate 'var' declarations without initialization are treated as no-ops by the JavaScript engine and do not overwrite existing values.`
+  },
+  {
+    id: 18,
+    topic: "Variables & Scope",
+    topicKey: "variables",
+    diff: "Expert",
+    title: "What happens when using 'with' statement and variable declaration?",
+    code: `var obj = { a: 1 };\nwith (obj) {\n  var b = 2;\n  a = 10;\n}\nconsole.log(obj.a, obj.b, b);`,
+    options: [
+      `10 undefined 2`,
+      `10 2 undefined`,
+      `1 2 2`,
+      `SyntaxError`
+    ],
+    answer: 0,
+    explanation: `'with' adds 'obj' to the scope chain. 'a = 10' modifies 'obj.a'. However, 'var b = 2' hoists 'b' to the enclosing function/global scope, NOT to 'obj'.`
+  },
+  {
+    id: 19,
+    topic: "Variables & Scope",
+    topicKey: "variables",
+    diff: "Medium",
+    title: "What is the result of typeof on an undeclared identifier?",
+    code: `console.log(typeof notDeclaredVariable);`,
+    options: [
+      `ReferenceError`,
+      `"undefined"`,
+      `"null"`,
+      `"object"`
+    ],
+    answer: 1,
+    explanation: `The 'typeof' operator has a historic safety guard: when used on an undeclared variable, it returns "undefined" instead of throwing a ReferenceError.`
+  },
+  {
+    id: 20,
+    topic: "Variables & Scope",
+    topicKey: "variables",
+    diff: "Hard",
+    title: "What is the output when a function declaration is conditionally placed inside a block?",
+    code: `console.log(typeof test);\nif (true) {\n  function test() {}\n}\nconsole.log(typeof test);`,
+    options: [
+      `"undefined" followed by "function"`,
+      `"function" followed by "function"`,
+      `"function" followed by "undefined"`,
+      `SyntaxError`
+    ],
+    answer: 0,
+    explanation: `In standard ES6, functions in blocks are hoisted as 'undefined' to the enclosing function/global scope. When the block executes, the function binding is exported to the outer scope.`
+  },
+
+  // TOPIC 2: LET, VAR, CONST (Q21 - Q40)
+  {
+    id: 21,
+    topic: "let, var, const",
+    topicKey: "let-var-const",
+    diff: "Easy",
+    title: "What happens when accessing a 'let' variable before its declaration?",
+    code: `console.log(a);\nlet a = 10;`,
+    options: [
+      `undefined`,
+      `ReferenceError: Cannot access 'a' before initialization`,
+      `10`,
+      `null`
+    ],
+    answer: 1,
+    explanation: `'let' and 'const' variables are hoisted into their enclosing block scope, but remain uninitialized in the Temporal Dead Zone (TDZ) until the declaration statement is executed.`
+  },
+  {
+    id: 22,
+    topic: "let, var, const",
+    topicKey: "let-var-const",
+    diff: "Medium",
+    title: "What does 'typeof' return on a 'let' variable inside its Temporal Dead Zone?",
+    code: `console.log(typeof myVar);\nlet myVar = 5;`,
+    options: [
+      `"undefined"`,
+      `"number"`,
+      `ReferenceError: Cannot access 'myVar' before initialization`,
+      `null`
+    ],
+    answer: 2,
+    explanation: `Unlike undeclared variables where 'typeof' returns "undefined", using 'typeof' on an uninitialized 'let' or 'const' inside its TDZ throws a ReferenceError.`
+  },
+  {
+    id: 23,
+    topic: "let, var, const",
+    topicKey: "let-var-const",
+    diff: "Easy",
+    title: "What will be printed by the asynchronous setTimeout in this 'var' loop?",
+    code: `for (var i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 0);\n}`,
+    options: [
+      `0 1 2`,
+      `3 3 3`,
+      `undefined undefined undefined`,
+      `0 0 0`
+    ],
+    answer: 1,
+    explanation: `Because 'var' is function/globally scoped, all callbacks capture the exact same single 'i' variable. By the time the event loop runs the timers, the loop has completed with 'i = 3'.`
+  },
+  {
+    id: 24,
+    topic: "let, var, const",
+    topicKey: "let-var-const",
+    diff: "Easy",
+    title: "What will be printed by the asynchronous setTimeout in this 'let' loop?",
+    code: `for (let i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 0);\n}`,
+    options: [
+      `3 3 3`,
+      `0 1 2`,
+      `2 2 2`,
+      `ReferenceError`
+    ],
+    answer: 1,
+    explanation: `The ES6 specification creates a new lexical binding for 'let' on every iteration of a for-loop. Each setTimeout callback closes over its own distinct 'i' value.`
+  },
+  {
+    id: 25,
+    topic: "let, var, const",
+    topicKey: "let-var-const",
+    diff: "Medium",
+    title: "What is the result of mutating an object declared with 'const'?",
+    code: `const user = { name: "John" };\nuser.name = "Jane";\nuser.age = 25;\nconsole.log(user.name, user.age);`,
+    options: [
+      `TypeError: Assignment to constant variable`,
+      `"Jane" 25`,
+      `"John" undefined`,
+      `SyntaxError`
+    ],
+    answer: 1,
+    explanation: `'const' creates an immutable binding (the variable cannot be reassigned to a new memory address), but the object itself remains completely mutable.`
+  },
+  {
+    id: 26,
+    topic: "let, var, const",
+    topicKey: "let-var-const",
+    diff: "Hard",
+    title: "What is the output of declaring 'let' with the same name across a switch block?",
+    code: `const action = "add";\nswitch (action) {\n  case "add":\n    let result = 10;\n    console.log(result);\n    break;\n  case "remove":\n    let result = 20;\n    console.log(result);\n    break;\n}`,
+    options: [
+      `10`,
+      `SyntaxError: Identifier 'result' has already been declared`,
+      `20`,
+      `undefined`
+    ],
+    answer: 1,
+    explanation: `The entire body of a 'switch' statement shares a single block scope unless explicit curly braces '{ }' are added to individual case clauses. Declaring 'let result' in two cases of the same switch causes a SyntaxError.`
+  },
+  {
+    id: 27,
+    topic: "let, var, const",
+    topicKey: "let-var-const",
+    diff: "Medium",
+    title: "What happens when using 'const' in a for...of loop vs a standard counter loop?",
+    code: `const arr = [1, 2];\nlet count = 0;\nfor (const item of arr) {\n  count += item;\n}\nconsole.log(count);`,
+    options: [
+      `TypeError: Assignment to constant variable`,
+      `3`,
+      `undefined`,
+      `NaN`
+    ],
+    answer: 1,
+    explanation: `In 'for...of' and 'for...in' loops, each iteration creates a fresh binding, so 'const item' is re-instantiated per iteration without reassignment. This works cleanly, unlike 'for (const i=0; i<2; i++)'.`
+  },
+  {
+    id: 28,
+    topic: "let, var, const",
+    topicKey: "let-var-const",
+    diff: "Medium",
+    title: "What happens when running a standard counter loop with 'const'?",
+    code: `try {\n  for (const i = 0; i < 3; i++) {}\n} catch (e) {\n  console.log(e.name);\n}`,
+    options: [
+      `SyntaxError`,
+      `TypeError`,
+      `ReferenceError`,
+      `Nothing is logged (runs successfully)`
+    ],
+    answer: 1,
+    explanation: `In 'for (const i = 0; i < 3; i++)', the update expression 'i++' attempts to reassign the constant 'i', which throws a runtime 'TypeError: Assignment to constant variable'.`
+  },
+  {
+    id: 29,
+    topic: "let, var, const",
+    topicKey: "let-var-const",
+    diff: "Hard",
+    title: "What is logged regarding global 'let' vs global 'var' on the window/globalThis object?",
+    code: `var globalVar = "A";\nlet globalLet = "B";\nconsole.log(globalThis.globalVar, globalThis.globalLet);`,
+    options: [
+      `"A" "B"`,
+      `"A" undefined`,
+      `undefined undefined`,
+      `"A" ReferenceError`
+    ],
+    answer: 1,
+    explanation: `In the global scope, 'var' creates a property on the global object ('globalThis.globalVar'). In contrast, 'let' and 'const' create top-level lexical environment bindings and are NEVER attached to 'globalThis'.`
+  },
+  {
+    id: 30,
+    topic: "let, var, const",
+    topicKey: "let-var-const",
+    diff: "Expert",
+    title: "What will this shadowing code output?",
+    code: `let x = 1;\nfunction test() {\n  console.log(x);\n  let x = 2;\n}\ntest();`,
+    options: [
+      `1`,
+      `2`,
+      `undefined`,
+      `ReferenceError: Cannot access 'x' before initialization`
+    ],
+    answer: 3,
+    explanation: `The inner 'let x = 2' declaration hoists to the top of 'test()', creating a Temporal Dead Zone inside that function. The engine will not look up to the outer 'let x = 1', causing a ReferenceError.`
+  },
+  {
+    id: 31,
+    topic: "let, var, const",
+    topicKey: "let-var-const",
+    diff: "Hard",
+    title: "What happens when re-declaring a parameter with 'let' vs 'var'?",
+    code: `function fn(x) {\n  let x = 10;\n  console.log(x);\n}`,
+    options: [
+      `SyntaxError: Identifier 'x' has already been declared`,
+      `10`,
+      `undefined`,
+      `TypeError`
+    ],
+    answer: 0,
+    explanation: `Function parameters share the top-level lexical environment of the function body. Because 'let' forbids re-declaring an existing binding in the same scope, this produces a compile-time SyntaxError.`
+  },
+  {
+    id: 32,
+    topic: "let, var, const",
+    topicKey: "let-var-const",
+    diff: "Easy",
+    title: "What happens if a 'const' variable is declared without an initializer?",
+    code: `try {\n  eval("const a;");\n} catch (e) {\n  console.log(e.name);\n}`,
+    options: [
+      `TypeError`,
+      `SyntaxError`,
+      `ReferenceError`,
+      `undefined`
+    ],
+    answer: 1,
+    explanation: `'const' declarations MUST be initialized immediately at the time of declaration. Omitting the initializer (e.g., 'const a;') causes a SyntaxError: Missing initializer in const declaration.`
+  },
+  {
+    id: 33,
+    topic: "let, var, const",
+    topicKey: "let-var-const",
+    diff: "Medium",
+    title: "What is the scope of a catch block parameter?",
+    code: `let err = "outer";\ntry {\n  throw "caught";\n} catch (err) {\n  console.log(err);\n}\nconsole.log(err);`,
+    options: [
+      `"caught" followed by "caught"`,
+      `"caught" followed by "outer"`,
+      `"outer" followed by "outer"`,
+      `ReferenceError`
+    ],
+    answer: 1,
+    explanation: `The 'catch (err)' clause creates its own dedicated block scope for the error parameter. Inside the catch block, 'err' is "caught", while the outer 'err' remains unchanged ("outer").`
+  },
+  {
+    id: 34,
+    topic: "let, var, const",
+    topicKey: "let-var-const",
+    diff: "Hard",
+    title: "What happens if a 'let' is declared in a single-statement if-block without curly braces?",
+    code: `try {\n  eval("if (true) let x = 1;");\n} catch (e) {\n  console.log(e.name);\n}`,
+    options: [
+      `SyntaxError`,
+      `TypeError`,
+      `ReferenceError`,
+      `Logs 1`
+    ],
+    answer: 0,
+    explanation: `Lexical declarations ('let', 'const', 'class', 'function') are not allowed as the single body of an 'if', 'for', or 'while' statement without curly braces, because declaring a variable in a block with no other statements is meaningless and forbidden by the grammar.`
+  },
+  {
+    id: 35,
+    topic: "let, var, const",
+    topicKey: "let-var-const",
+    diff: "Medium",
+    title: "What will be printed when mutating an array declared with 'const'?",
+    code: `const nums = [1, 2];\nnums.push(3);\nconsole.log(nums.length);\ntry {\n  nums = [4, 5];\n} catch (e) {\n  console.log(e.name);\n}`,
+    options: [
+      `3 followed by TypeError`,
+      `TypeError followed by 3`,
+      `2 followed by TypeError`,
+      `SyntaxError`
+    ],
+    answer: 0,
+    explanation: `Array mutation methods (like push, pop, shift, splice) do not alter the array reference. However, reassignment ('nums = ...') throws a TypeError.`
+  },
+  {
+    id: 36,
+    topic: "let, var, const",
+    topicKey: "let-var-const",
+    diff: "Expert",
+    title: "What is logged when a default parameter accesses another parameter declared later?",
+    code: `function test(a = b, b = 2) {\n  return a + b;\n}\ntest();`,
+    options: [
+      `4`,
+      `NaN`,
+      `ReferenceError: Cannot access 'b' before initialization`,
+      `undefined`
+    ],
+    answer: 2,
+    explanation: `Parameters are evaluated from left to right in their own lexical scope. When 'a = b' executes, 'b' is still in the Temporal Dead Zone, resulting in a ReferenceError.`
+  },
+  {
+    id: 37,
+    topic: "let, var, const",
+    topicKey: "let-var-const",
+    diff: "Hard",
+    title: "What is the output of shadowing a block-scoped 'let' with 'var'?",
+    code: `try {\n  eval("let a = 1; { var a = 2; }");\n} catch (e) {\n  console.log(e.name);\n}`,
+    options: [
+      `SyntaxError`,
+      `TypeError`,
+      `ReferenceError`,
+      `2`
+    ],
+    answer: 0,
+    explanation: `A 'var' declaration hoists to the function or script scope. Since 'let a' already exists in that same outer scope, the 'var a' causes an illegal re-declaration SyntaxError.`
+  },
+  {
+    id: 38,
+    topic: "let, var, const",
+    topicKey: "let-var-const",
+    diff: "Medium",
+    title: "What is logged when closing over 'let' inside a block?",
+    code: `let funcs = [];\nfor (let i = 0; i < 2; i++) {\n  let j = i * 2;\n  funcs.push(() => j);\n}\nconsole.log(funcs[0](), funcs[1]());`,
+    options: [
+      `0 2`,
+      `2 2`,
+      `0 0`,
+      `undefined undefined`
+    ],
+    answer: 0,
+    explanation: `Each iteration of the loop creates a new block instance with its own fresh binding for 'j'. Therefore, each closure preserves its respective value: 0 and 2.`
+  },
+  {
+    id: 39,
+    topic: "let, var, const",
+    topicKey: "let-var-const",
+    diff: "Easy",
+    title: "What is logged when re-assigning a 'let' variable?",
+    code: `let x = 10;\nx = 20;\nx += 5;\nconsole.log(x);`,
+    options: [
+      `10`,
+      `20`,
+      `25`,
+      `TypeError`
+    ],
+    answer: 2,
+    explanation: `'let' variables are completely re-assignable and mutable.`
+  },
+  {
+    id: 40,
+    topic: "let, var, const",
+    topicKey: "let-var-const",
+    diff: "Expert",
+    title: "What will this complex block and hoisting puzzle evaluate to?",
+    code: `let x = "outer";\n{\n  console.log(typeof x);\n  let x = "inner";\n}`,
+    options: [
+      `"string"`,
+      `"undefined"`,
+      `ReferenceError: Cannot access 'x' before initialization`,
+      `null`
+    ],
+    answer: 2,
+    explanation: `Even though 'typeof' is normally safe for undeclared variables, it will immediately throw a ReferenceError when applied to an identifier in the Temporal Dead Zone within a block.`
+  },
+
+  // TOPIC 3: PRIMITIVES AND OBJECTS (Q41 - Q60)
+  {
+    id: 41,
+    topic: "Primitives & Objects",
+    topicKey: "primitives-objects",
+    diff: "Easy",
+    title: "What is the difference between typeof on primitive vs Object wrapper?",
+    code: `console.log(typeof "hello", typeof new String("hello"));`,
+    options: [
+      `"string" "string"`,
+      `"string" "object"`,
+      `"object" "object"`,
+      `"primitive" "object"`
+    ],
+    answer: 1,
+    explanation: `Primitive strings have typeof "string". When invoked with the 'new' keyword, 'new String()' constructs an object wrapper around the primitive string, so its typeof is "object".`
+  },
+  {
+    id: 42,
+    topic: "Primitives & Objects",
+    topicKey: "primitives-objects",
+    diff: "Medium",
+    title: "What happens when you assign a property to a primitive string?",
+    code: `var str = "developer";\nstr.role = "admin";\nconsole.log(str.role);`,
+    options: [
+      `"admin"`,
+      `undefined`,
+      `TypeError in non-strict mode`,
+      `ReferenceError`
+    ],
+    answer: 1,
+    explanation: `JavaScript uses 'autoboxing'. When accessing 'str.role = ...', an ephemeral String wrapper object is temporarily created, the property is set on that temporary object, and the object is immediately discarded. Accessing 'str.role' on the next line creates a brand-new temporary wrapper whose 'role' is undefined.`
+  },
+  {
+    id: 43,
+    topic: "Primitives & Objects",
+    topicKey: "primitives-objects",
+    diff: "Medium",
+    title: "What will be printed when mutating an object passed into a function vs reassigning it?",
+    code: `function update(person, num) {\n  person.name = "Alice";\n  person = { name: "Bob" };\n  num = 100;\n}\nconst user = { name: "Charlie" };\nlet val = 10;\nupdate(user, val);\nconsole.log(user.name, val);`,
+    options: [
+      `"Bob" 100`,
+      `"Alice" 10`,
+      `"Charlie" 10`,
+      `"Bob" 10`
+    ],
+    answer: 1,
+    explanation: `JavaScript passes all arguments by value. For objects, the value passed is the reference copy. Mutating 'person.name' alters the underlying object. However, reassigning 'person = { ... }' only rebinds the local parameter copy. 'num' is a primitive, so changes to it never affect 'val'.`
+  },
+  {
+    id: 44,
+    topic: "Primitives & Objects",
+    topicKey: "primitives-objects",
+    diff: "Medium",
+    title: "What happens when using objects as keys in a plain JavaScript object?",
+    code: `const a = {};\nconst b = { key: "b" };\nconst c = { key: "c" };\na[b] = 123;\na[c] = 456;\nconsole.log(a[b]);`,
+    options: [
+      `123`,
+      `456`,
+      `undefined`,
+      `TypeError`
+    ],
+    answer: 1,
+    explanation: `Plain JavaScript objects only support strings and symbols as keys. When an object is used as a key ('a[b]'), it is coerced to a string via .toString(), producing "[object Object]". Thus 'a[b]' and 'a[c]' both write to the exact same key 'a["[object Object]"]'.`
+  },
+  {
+    id: 45,
+    topic: "Primitives & Objects",
+    topicKey: "primitives-objects",
+    diff: "Easy",
+    title: "What does the following equality check between two empty objects evaluate to?",
+    code: `console.log({} === {}, {} == {});`,
+    options: [
+      `true true`,
+      `false false`,
+      `true false`,
+      `false true`
+    ],
+    answer: 1,
+    explanation: `In JavaScript, objects are compared by reference identity (their memory address), never by structural contents. Two distinct object literals represent two different instances in memory, so both comparisons evaluate to false.`
+  },
+  {
+    id: 46,
+    topic: "Primitives & Objects",
+    topicKey: "primitives-objects",
+    diff: "Medium",
+    title: "What is the output of Object.freeze() on a nested object?",
+    code: `const config = Object.freeze({\n  env: "production",\n  db: { port: 5432 }\n});\nconfig.env = "dev";\nconfig.db.port = 3306;\nconsole.log(config.env, config.db.port);`,
+    options: [
+      `"dev" 3306`,
+      `"production" 5432`,
+      `"production" 3306`,
+      `TypeError`
+    ],
+    answer: 2,
+    explanation: `'Object.freeze()' performs a shallow freeze. It prevents modification of the immediate properties of the object ('env' cannot be changed), but nested objects ('config.db') remain fully mutable.`
+  },
+  {
+    id: 47,
+    topic: "Primitives & Objects",
+    topicKey: "primitives-objects",
+    diff: "Easy",
+    title: "What is the historical typeof result of null?",
+    code: `console.log(typeof null, null instanceof Object);`,
+    options: [
+      `"null" false`,
+      `"object" false`,
+      `"object" true`,
+      `"undefined" false`
+    ],
+    answer: 1,
+    explanation: `'typeof null === "object"' is a famous legacy bug from the first implementation of JavaScript in 1995 where object type tags were 0. However, 'null instanceof Object' is false because null has no prototype chain.`
+  },
+  {
+    id: 48,
+    topic: "Primitives & Objects",
+    topicKey: "primitives-objects",
+    diff: "Hard",
+    title: "What is logged when inspecting Symbol property enumeration in an object?",
+    code: `const id = Symbol("id");\nconst obj = { [id]: 100, name: "Antigravity" };\nconsole.log(Object.keys(obj).length, JSON.stringify(obj));`,
+    options: [
+      `2 '{"id":100,"name":"Antigravity"}'`,
+      `1 '{"name":"Antigravity"}'`,
+      `1 '{"id":100,"name":"Antigravity"}'`,
+      `2 '{"name":"Antigravity"}'`
+    ],
+    answer: 1,
+    explanation: `Symbols are non-enumerable in standard 'Object.keys()', 'Object.values()', 'for...in' loops, and are completely omitted by 'JSON.stringify()'. Only 'Object.getOwnPropertySymbols()' or 'Reflect.ownKeys()' reveal them.`
+  },
+  {
+    id: 49,
+    topic: "Primitives & Objects",
+    topicKey: "primitives-objects",
+    diff: "Medium",
+    title: "What is the difference between Object.is() and strict equality (===)?",
+    code: `console.log(NaN === NaN, Object.is(NaN, NaN));\nconsole.log(-0 === +0, Object.is(-0, +0));`,
+    options: [
+      `true true and true true`,
+      `false true and true false`,
+      `false true and false true`,
+      `false false and true true`
+    ],
+    answer: 1,
+    explanation: `'Object.is()' uses the SameValue algorithm. Unlike '===', 'Object.is' considers 'NaN' equal to 'NaN' (true), and distinguishes between negative zero '-0' and positive zero '+0' (false).`
+  },
+  {
+    id: 50,
+    topic: "Primitives & Objects",
+    topicKey: "primitives-objects",
+    diff: "Hard",
+    title: "What is the output when performing arithmetic with BigInt and Number?",
+    code: `try {\n  console.log(10n + 5);\n} catch (e) {\n  console.log(e.name);\n}`,
+    options: [
+      `15n`,
+      `15`,
+      `TypeError`,
+      `NaN`
+    ],
+    answer: 2,
+    explanation: `JavaScript does NOT allow implicit coercion between BigInt and Number in arithmetic operations to prevent unexpected precision loss. Attempting '10n + 5' throws a 'TypeError: Cannot mix BigInt and other types'.`
+  },
+  {
+    id: 51,
+    topic: "Primitives & Objects",
+    topicKey: "primitives-objects",
+    diff: "Medium",
+    title: "What is the output of shallow copying with object spread on nested arrays?",
+    code: `const original = { list: [1, 2] };\nconst copy = { ...original };\ncopy.list.push(3);\nconsole.log(original.list.length, copy.list.length);`,
+    options: [
+      `2 3`,
+      `3 3`,
+      `2 2`,
+      `TypeError`
+    ],
+    answer: 1,
+    explanation: `Object spread '{ ...original }' only performs a shallow clone. Both 'original.list' and 'copy.list' point to the exact same array in memory. Modifying the array via 'copy.list.push(3)' affects both.`
+  },
+  {
+    id: 52,
+    topic: "Primitives & Objects",
+    topicKey: "primitives-objects",
+    diff: "Hard",
+    title: "What is the output of accessing properties on Object.create(null)?",
+    code: `const dict = Object.create(null);\ndict.hello = "world";\ntry {\n  console.log(dict.toString());\n} catch (e) {\n  console.log(e.name);\n}`,
+    options: [
+      `"[object Object]"`,
+      `"world"`,
+      `TypeError`,
+      `undefined`
+    ],
+    answer: 2,
+    explanation: `'Object.create(null)' creates a pure dictionary object that does NOT inherit from 'Object.prototype'. Because it lacks prototype methods, calling 'dict.toString()' throws a 'TypeError: dict.toString is not a function'.`
+  },
+  {
+    id: 53,
+    topic: "Primitives & Objects",
+    topicKey: "primitives-objects",
+    diff: "Easy",
+    title: "Can primitive strings be mutated by index assignment?",
+    code: `let str = "cat";\nstr[0] = "r";\nconsole.log(str);`,
+    options: [
+      `"rat"`,
+      `"cat"`,
+      `TypeError`,
+      `undefined`
+    ],
+    answer: 1,
+    explanation: `In JavaScript, all primitives (including strings) are strictly immutable. Attempting index assignment ('str[0] = "r"') fails silently in non-strict mode (or throws in strict mode), leaving 'str' as "cat".`
+  },
+  {
+    id: 54,
+    topic: "Primitives & Objects",
+    topicKey: "primitives-objects",
+    diff: "Medium",
+    title: "What is the output of comparing primitive boolean with Boolean object?",
+    code: `const a = false;\nconst b = new Boolean(false);\nconsole.log(Boolean(b), a == b, a === b);`,
+    options: [
+      `false true true`,
+      `true true false`,
+      `false false false`,
+      `true false false`
+    ],
+    answer: 1,
+    explanation: `'b' is an object ('new Boolean(false)'). Any object is truthy in JavaScript, so 'Boolean(b)' is true! In loose equality ('a == b'), 'b' is converted to primitive false, so 'false == false' is true. In strict equality ('a === b'), primitive and object types differ, so it is false.`
+  },
+  {
+    id: 55,
+    topic: "Primitives & Objects",
+    topicKey: "primitives-objects",
+    diff: "Hard",
+    title: "What will this custom valueOf and toString coercion order log?",
+    code: `const obj = {\n  valueOf() { return 10; },\n  toString() { return "20"; }\n};\nconsole.log(obj + 5, \`\${obj}!\`);`,
+    options: [
+      `"205" "20!"`,
+      `15 "20!"`,
+      `15 "10!"`,
+      `"105" "20!"`
+    ],
+    answer: 1,
+    explanation: `In numeric context and addition with '+', JavaScript invokes 'valueOf()' first, yielding 10 + 5 = 15. In string template interpolation '\`\${obj}!\`', the string hint is used, so 'toString()' is called first, yielding "20!".`
+  },
+  {
+    id: 56,
+    topic: "Primitives & Objects",
+    topicKey: "primitives-objects",
+    diff: "Expert",
+    title: "What is logged when using Symbol.toPrimitive?",
+    code: `const item = {\n  [Symbol.toPrimitive](hint) {\n    return hint === "number" ? 42 : "custom";\n  }\n};\nconsole.log(+item, \`\${item}\`);`,
+    options: [
+      `42 "custom"`,
+      `"custom" "custom"`,
+      `42 "42"`,
+      `NaN "custom"`
+    ],
+    answer: 0,
+    explanation: `'Symbol.toPrimitive' overrides both 'valueOf' and 'toString'. When '+item' triggers the "number" hint it returns 42. When string template interpolation triggers the "string" hint it returns "custom".`
+  },
+  {
+    id: 57,
+    topic: "Primitives & Objects",
+    topicKey: "primitives-objects",
+    diff: "Medium",
+    title: "What does Number.isNaN() return compared to global isNaN()?",
+    code: `console.log(isNaN("hello"), Number.isNaN("hello"));`,
+    options: [
+      `true true`,
+      `true false`,
+      `false false`,
+      `false true`
+    ],
+    answer: 1,
+    explanation: `The global 'isNaN(val)' attempts to coerce 'val' into a number first ('Number("hello")' becomes NaN, returning true). In contrast, 'Number.isNaN(val)' strictly checks whether 'val' is of type Number and is currently NaN (no coercion), returning false.`
+  },
+  {
+    id: 58,
+    topic: "Primitives & Objects",
+    topicKey: "primitives-objects",
+    diff: "Hard",
+    title: "What is the result of sealing an object with Object.seal()?",
+    code: `const user = { name: "Bob" };\nObject.seal(user);\nuser.name = "Robert";\ndelete user.name;\nuser.age = 30;\nconsole.log(user.name, user.age);`,
+    options: [
+      `"Robert" undefined`,
+      `"Bob" undefined`,
+      `"Robert" 30`,
+      `TypeError`
+    ],
+    answer: 0,
+    explanation: `'Object.seal()' prevents adding new properties ('user.age' is not added) and marks existing properties as non-configurable ('delete user.name' fails). However, existing writable properties can still be modified, so 'user.name = "Robert"' succeeds.`
+  },
+  {
+    id: 59,
+    topic: "Primitives & Objects",
+    topicKey: "primitives-objects",
+    diff: "Medium",
+    title: "What happens when querying properties on an array using 'in' operator?",
+    code: `const arr = [1, , 3];\nconsole.log(0 in arr, 1 in arr, 2 in arr);`,
+    options: [
+      `true true true`,
+      `true false true`,
+      `false false false`,
+      `true false false`
+    ],
+    answer: 1,
+    explanation: `The array has an empty slot (sparse array) at index 1. The 'in' operator checks if the specified index/key actually exists in the object or its prototype chain. Index 1 does not exist, so it evaluates to false.`
+  },
+  {
+    id: 60,
+    topic: "Primitives & Objects",
+    topicKey: "primitives-objects",
+    diff: "Easy",
+    title: "What is the output of checking typeof for an Array?",
+    code: `console.log(typeof [], Array.isArray([]));`,
+    options: [
+      `"array" true`,
+      `"object" true`,
+      `"array" false`,
+      `"object" false`
+    ],
+    answer: 1,
+    explanation: `In JavaScript, arrays are objects. Thus 'typeof []' is "object". To reliably verify if a value is an array, 'Array.isArray()' is used.`
+  },
+
+  // TOPIC 4: OPERATORS AND EXPRESSIONS (Q61 - Q80)
+  {
+    id: 61,
+    topic: "Operators & Expressions",
+    topicKey: "operators",
+    diff: "Easy",
+    title: "What is the output of the addition operator when mixed with strings?",
+    code: `console.log(1 + 2 + "3", "1" + 2 + 3);`,
+    options: [
+      `"33" "123"`,
+      `"6" "6"`,
+      `"123" "123"`,
+      `33 15`
+    ],
+    answer: 0,
+    explanation: `Evaluation proceeds left-to-right. For '1 + 2 + "3"', '1 + 2' is 3 (number addition), then '3 + "3"' yields "33" (string concatenation). For '"1" + 2 + 3', '"1" + 2' is "12", then '"12" + 3' yields "123".`
+  },
+  {
+    id: 62,
+    topic: "Operators & Expressions",
+    topicKey: "operators",
+    diff: "Easy",
+    title: "What does the subtraction and multiplication operators do with numeric strings?",
+    code: `console.log("6" - "2", "6" * "2", "6" / "2");`,
+    options: [
+      `4 12 3`,
+      `NaN NaN NaN`,
+      `"4" "12" "3"`,
+      `TypeError`
+    ],
+    answer: 0,
+    explanation: `Unlike the '+' operator which overloads for string concatenation, arithmetic operators '-', '*', and '/' only exist for numbers. They implicitly coerce operands to numbers.`
+  },
+  {
+    id: 63,
+    topic: "Operators & Expressions",
+    topicKey: "operators",
+    diff: "Medium",
+    title: "What does loose equality (==) evaluate to for these famous edge cases?",
+    code: `console.log("" == 0, "0" == 0, false == "0");`,
+    options: [
+      `true true true`,
+      `false true false`,
+      `false false false`,
+      `true false true`
+    ],
+    answer: 0,
+    explanation: `In abstract equality (==), strings are converted to numbers when compared with numbers. 'Number("") === 0', 'Number("0") === 0'. In 'false == "0"', boolean false becomes 0, and '"0"' becomes 0, so 0 == 0 is true.`
+  },
+  {
+    id: 64,
+    topic: "Operators & Expressions",
+    topicKey: "operators",
+    diff: "Medium",
+    title: "What is the difference between nullish coalescing (??) and logical OR (||)?",
+    code: `console.log(0 || 42, 0 ?? 42);\nconsole.log("" || "default", "" ?? "default");`,
+    options: [
+      `42 42 and "default" "default"`,
+      `42 0 and "default" ""`,
+      `0 0 and "" ""`,
+      `42 0 and "default" "default"`
+    ],
+    answer: 1,
+    explanation: `'||' returns the right-hand side for ANY falsy value (0, "", false, null, undefined, NaN). '??' (nullish coalescing) ONLY falls back if the left operand is strictly 'null' or 'undefined'. Thus 0 and "" are preserved.`
+  },
+  {
+    id: 65,
+    topic: "Operators & Expressions",
+    topicKey: "operators",
+    diff: "Medium",
+    title: "What does the optional chaining operator (?.) return when property is null or undefined?",
+    code: `const user = { profile: null };\nconsole.log(user?.profile?.name, user?.orders?.[0]);`,
+    options: [
+      `undefined undefined`,
+      `TypeError: Cannot read property of null`,
+      `null undefined`,
+      `ReferenceError`
+    ],
+    answer: 0,
+    explanation: `Optional chaining short-circuits and returns 'undefined' immediately whenever the reference before '?.' is nullish (null or undefined), without throwing an error.`
+  },
+  {
+    id: 66,
+    topic: "Operators & Expressions",
+    topicKey: "operators",
+    diff: "Easy",
+    title: "What is the output of post-increment vs pre-increment?",
+    code: `let a = 5;\nlet b = a++;\nlet c = ++a;\nconsole.log(a, b, c);`,
+    options: [
+      `7 5 7`,
+      `7 6 7`,
+      `6 5 6`,
+      `7 5 6`
+    ],
+    answer: 0,
+    explanation: `'b = a++' returns the value before incrementing (5) and then 'a' becomes 6. Next, 'c = ++a' increments 'a' to 7 and returns the new value (7). At the end, a is 7, b is 5, c is 7.`
+  },
+  {
+    id: 67,
+    topic: "Operators & Expressions",
+    topicKey: "operators",
+    diff: "Hard",
+    title: "What is the output of the comma operator in this expression?",
+    code: `let x = (1, 2, 3 + 4);\nconsole.log(x);`,
+    options: [
+      `1`,
+      `7`,
+      `[1, 2, 7]`,
+      `SyntaxError`
+    ],
+    answer: 1,
+    explanation: `The comma operator ',' evaluates each of its operands from left to right and returns the value of the last operand. Here, '3 + 4' is evaluated and returned, so x = 7.`
+  },
+  {
+    id: 68,
+    topic: "Operators & Expressions",
+    topicKey: "operators",
+    diff: "Hard",
+    title: "What does short-circuit evaluation do with side-effects in this snippet?",
+    code: `let count = 0;\nconst check = false && ++count;\nconst check2 = true || ++count;\nconsole.log(count);`,
+    options: [
+      `2`,
+      `1`,
+      `0`,
+      `NaN`
+    ],
+    answer: 2,
+    explanation: `In 'false && ...', the left operand is falsy, so evaluation immediately short-circuits and '++count' is never executed. In 'true || ...', the left operand is truthy, so evaluation short-circuits and '++count' is again skipped. 'count' remains 0.`
+  },
+  {
+    id: 69,
+    topic: "Operators & Expressions",
+    topicKey: "operators",
+    diff: "Medium",
+    title: "What is the output of unary plus on various primitives?",
+    code: `console.log(+true, +false, +"", +null, +undefined);`,
+    options: [
+      `1 0 0 0 NaN`,
+      `1 0 NaN 0 NaN`,
+      `1 0 0 NaN NaN`,
+      `true false 0 0 NaN`
+    ],
+    answer: 0,
+    explanation: `Unary plus converts operands to numbers. '+true' is 1, '+false' is 0, '+""' is 0, '+null' is 0, and '+undefined' is NaN.`
+  },
+  {
+    id: 70,
+    topic: "Operators & Expressions",
+    topicKey: "operators",
+    diff: "Hard",
+    title: "What does double bitwise NOT (~~) do to fractional numbers?",
+    code: `console.log(~~4.9, ~~(-4.9));`,
+    options: [
+      `5 -5`,
+      `4 -4`,
+      `4 -5`,
+      `5 -4`
+    ],
+    answer: 1,
+    explanation: `Bitwise operators convert their operands to 32-bit signed integers. '~~' truncates the decimal part towards zero (similar to Math.trunc). '~~4.9' becomes 4, and '~~(-4.9)' becomes -4.`
+  },
+  {
+    id: 71,
+    topic: "Operators & Expressions",
+    topicKey: "operators",
+    diff: "Hard",
+    title: "What is the evaluation of relational string comparison?",
+    code: `console.log("25" > "100", "apple" < "banana");`,
+    options: [
+      `false true`,
+      `true true`,
+      `false false`,
+      `true false`
+    ],
+    answer: 1,
+    explanation: `When both operands are strings, the '>' and '<' operators compare lexicographically by their Unicode character code points. The character code of "2" (50) is greater than "1" (49), so '"25" > "100"' is true!`
+  },
+  {
+    id: 72,
+    topic: "Operators & Expressions",
+    topicKey: "operators",
+    diff: "Expert",
+    title: "What does adding empty arrays and empty objects evaluate to?",
+    code: `console.log([] + [], [] + {}, {} + []);`,
+    options: [
+      `"" "[object Object]" "[object Object]"`,
+      `0 0 0`,
+      `"" "[object Object]" 0`,
+      `TypeError`
+    ],
+    answer: 0,
+    explanation: `'[] + []' converts both arrays to primitive strings: '"" + "" = ""'. '[] + {}' converts empty array to '""' and object to '"[object Object]"', yielding '"[object Object]"'. Inside 'console.log({} + [])', the object is parsed as an expression and also yields '"[object Object]"'.`
+  },
+  {
+    id: 73,
+    topic: "Operators & Expressions",
+    topicKey: "operators",
+    diff: "Medium",
+    title: "What is the associativity and result of the exponentiation operator (**)?",
+    code: `console.log(2 ** 3 ** 2);`,
+    options: [
+      `64`,
+      `512`,
+      `36`,
+      `SyntaxError`
+    ],
+    answer: 1,
+    explanation: `The exponentiation operator '**' is right-associative! Therefore, '2 ** 3 ** 2' evaluates as '2 ** (3 ** 2)' = '2 ** 9' = 512.`
+  },
+  {
+    id: 74,
+    topic: "Operators & Expressions",
+    topicKey: "operators",
+    diff: "Medium",
+    title: "What does the logical nullish assignment operator (??=) do?",
+    code: `let x = null;\nlet y = 0;\nx ??= 10;\ny ??= 20;\nconsole.log(x, y);`,
+    options: [
+      `10 20`,
+      `10 0`,
+      `null 0`,
+      `10 undefined`
+    ],
+    answer: 1,
+    explanation: `'a ??= b' assigns 'b' to 'a' ONLY if 'a' is nullish (null or undefined). Since 'x' is null, it receives 10. Since 'y' is 0 (falsy, but not nullish), it is not assigned and remains 0.`
+  },
+  {
+    id: 75,
+    topic: "Operators & Expressions",
+    topicKey: "operators",
+    diff: "Hard",
+    title: "What does the void operator return in JavaScript?",
+    code: `console.log(void 0, void(1 + 1), void 0 === undefined);`,
+    options: [
+      `0 2 false`,
+      `undefined undefined true`,
+      `null null true`,
+      `NaN NaN false`
+    ],
+    answer: 1,
+    explanation: `The 'void' operator evaluates its expression and always returns the primitive value 'undefined'. 'void 0 === undefined' is true.`
+  },
+  {
+    id: 76,
+    topic: "Operators & Expressions",
+    topicKey: "operators",
+    diff: "Medium",
+    title: "What is the result of using 'in' operator on an object with undefined property value?",
+    code: `const user = { role: undefined };\nconsole.log("role" in user, user.role !== undefined);`,
+    options: [
+      `true false`,
+      `true true`,
+      `false false`,
+      `false true`
+    ],
+    answer: 0,
+    explanation: `The 'in' operator checks whether the key exists in the object, regardless of whether its value is undefined (returns true). A naive 'user.role !== undefined' check returns false.`
+  },
+  {
+    id: 77,
+    topic: "Operators & Expressions",
+    topicKey: "operators",
+    diff: "Hard",
+    title: "What is the output of comparing null with relational vs equality operators?",
+    code: `console.log(null > 0, null == 0, null >= 0);`,
+    options: [
+      `false false false`,
+      `false false true`,
+      `false true true`,
+      `true true true`
+    ],
+    answer: 1,
+    explanation: `Relational comparisons ('>=', '<=') coerce 'null' to a numeric 0, so '0 >= 0' is true and '0 > 0' is false. However, the abstract equality operator '==' has special rules: 'null' is only loosely equal to 'undefined' and nothing else, so 'null == 0' is false.`
+  },
+  {
+    id: 78,
+    topic: "Operators & Expressions",
+    topicKey: "operators",
+    diff: "Expert",
+    title: "What does instanceof evaluate to across prototype mutations?",
+    code: `function A() {}\nconst a = new A();\nA.prototype = {};\nconsole.log(a instanceof A);`,
+    options: [
+      `true`,
+      `false`,
+      `TypeError`,
+      `undefined`
+    ],
+    answer: 1,
+    explanation: `'instanceof' checks whether the constructor's current 'prototype' object appears anywhere in the target object's prototype chain. Because 'A.prototype' was reassigned to a new object, the prototype chain of 'a' still points to the old prototype, resulting in false.`
+  },
+  {
+    id: 79,
+    topic: "Operators & Expressions",
+    topicKey: "operators",
+    diff: "Easy",
+    title: "What does the logical OR assignment operator (||=) output?",
+    code: `let count = 0;\ncount ||= 10;\nconsole.log(count);`,
+    options: [
+      `0`,
+      `10`,
+      `undefined`,
+      `TypeError`
+    ],
+    answer: 1,
+    explanation: `'count ||= 10' assigns 10 if 'count' is falsy. Since 0 is falsy, 'count' is assigned 10.`
+  },
+  {
+    id: 80,
+    topic: "Operators & Expressions",
+    topicKey: "operators",
+    diff: "Hard",
+    title: "What is the precedence evaluation of logical AND (&&) vs logical OR (||)?",
+    code: `console.log(true || false && false, (true || false) && false);`,
+    options: [
+      `false false`,
+      `true false`,
+      `true true`,
+      `false true`
+    ],
+    answer: 1,
+    explanation: `'&&' has higher operator precedence than '||'. Therefore, 'true || false && false' evaluates as 'true || (false && false)' = 'true || false' = true. In the second expression, parentheses force grouping, yielding 'true && false' = false.`
+  },
+
+  // TOPIC 5: CONDITIONAL EXPRESSIONS (Q81 - Q100)
+  {
+    id: 81,
+    topic: "Conditional Expressions",
+    topicKey: "conditionals",
+    diff: "Easy",
+    title: "Which of the following is NOT falsy in JavaScript?",
+    code: `const values = [0, "", "0", NaN, null, undefined];\nconst truthy = values.filter(Boolean);\nconsole.log(truthy);`,
+    options: [
+      `[] (empty array)`,
+      `["0"]`,
+      `[0]`,
+      `[""]`
+    ],
+    answer: 1,
+    explanation: `In JavaScript, the string '"0"' is a non-empty string. Any non-empty string is truthy! The only falsy values in JS are: false, 0, -0, 0n, "", null, undefined, and NaN.`
+  },
+  {
+    id: 82,
+    topic: "Conditional Expressions",
+    topicKey: "conditionals",
+    diff: "Medium",
+    title: "What does this condition with an empty array and object evaluate to?",
+    code: `if ([]) console.log("A");\nif ({}) console.log("B");\nif (Boolean(new Boolean(false))) console.log("C");`,
+    options: [
+      `None of them log`,
+      `"A" and "B" only`,
+      `"A", "B", and "C"`,
+      `"B" only`
+    ],
+    answer: 2,
+    explanation: `All objects in JavaScript are truthy in boolean context, including empty arrays '[]', empty objects '{}', and 'new Boolean(false)'. Therefore, all three conditions evaluate to true.`
+  },
+  {
+    id: 83,
+    topic: "Conditional Expressions",
+    topicKey: "conditionals",
+    diff: "Medium",
+    title: "What is the output of nested ternary operators in this score evaluation?",
+    code: `const score = 75;\nconst grade = score >= 90 ? "A" : score >= 80 ? "B" : score >= 70 ? "C" : "F";\nconsole.log(grade);`,
+    options: [
+      `"B"`,
+      `"C"`,
+      `"F"`,
+      `"A"`
+    ],
+    answer: 1,
+    explanation: `Ternary operators are right-associative. 'score >= 90' is false, so it checks 'score >= 80' (false), then checks 'score >= 70' (true), returning "C".`
+  },
+  {
+    id: 84,
+    topic: "Conditional Expressions",
+    topicKey: "conditionals",
+    diff: "Medium",
+    title: "What does a switch statement do when matching number vs numeric string?",
+    code: `const val = "1";\nswitch (val) {\n  case 1:\n    console.log("number");\n    break;\n  case "1":\n    console.log("string");\n    break;\n  default:\n    console.log("default");\n}`,
+    options: [
+      `"number"`,
+      `"string"`,
+      `"number" followed by "string"`,
+      `"default"`
+    ],
+    answer: 1,
+    explanation: `'switch' statements use strict equality comparison (===). The string '"1"' does NOT match the number 1, but matches the string case '"1"'.`
+  },
+  {
+    id: 85,
+    topic: "Conditional Expressions",
+    topicKey: "conditionals",
+    diff: "Easy",
+    title: "What happens when switch cases omit the 'break' statement?",
+    code: `const num = 2;\nlet result = "";\nswitch (num) {\n  case 1: result += "1";\n  case 2: result += "2";\n  case 3: result += "3";\n  default: result += "D";\n}\nconsole.log(result);`,
+    options: [
+      `"2"`,
+      `"23D"`,
+      `"23"`,
+      `"D"`
+    ],
+    answer: 1,
+    explanation: `When a matching case lacks a 'break' statement, execution falls through unconditionally to subsequent cases and the default case, ignoring their condition tests. Thus "2", "3", and "D" are concatenated.`
+  },
+  {
+    id: 86,
+    topic: "Conditional Expressions",
+    topicKey: "conditionals",
+    diff: "Hard",
+    title: "What is the output of the 'switch (true)' pattern?",
+    code: `const age = 22;\nlet category;\nswitch (true) {\n  case age < 13:\n    category = "child"; break;\n  case age < 20:\n    category = "teen"; break;\n  case age >= 20:\n    category = "adult"; break;\n}\nconsole.log(category);`,
+    options: [
+      `"teen"`,
+      `"adult"`,
+      `undefined`,
+      `TypeError`
+    ],
+    answer: 1,
+    explanation: `In 'switch (true)', each case expression is evaluated until one strictly equals true ('true === (age >= 20)'). 'age >= 20' is true, so "adult" is assigned.`
+  },
+  {
+    id: 87,
+    topic: "Conditional Expressions",
+    topicKey: "conditionals",
+    diff: "Medium",
+    title: "What happens with assignment inside an if condition?",
+    code: `let x = 0;\nif (x = 5) {\n  console.log("True branch:", x);\n} else {\n  console.log("False branch:", x);\n}`,
+    options: [
+      `"False branch: 0"`,
+      `"True branch: 5"`,
+      `SyntaxError`,
+      `"True branch: 0"`
+    ],
+    answer: 1,
+    explanation: `'x = 5' is an assignment, not a comparison. The assignment expression evaluates to the assigned value (5), which is truthy. The 'if' block executes and 'x' is now 5.`
+  },
+  {
+    id: 88,
+    topic: "Conditional Expressions",
+    topicKey: "conditionals",
+    diff: "Hard",
+    title: "What is logged when switch default clause is placed at the top and lacks break?",
+    code: `const x = 10;\nlet out = "";\nswitch (x) {\n  default:\n    out += "def ";\n  case 1:\n    out += "one ";\n    break;\n  case 2:\n    out += "two ";\n}`,
+    options: [
+      `"def "`,
+      `"def one "`,
+      `"one "`,
+      `SyntaxError`
+    ],
+    answer: 1,
+    explanation: `When no cases match, execution jumps to 'default'. Because 'default' lacks a 'break', execution falls through to the next case (case 1) appending "one " before hitting 'break'.`
+  },
+  {
+    id: 89,
+    topic: "Conditional Expressions",
+    topicKey: "conditionals",
+    diff: "Easy",
+    title: "What is the return value of double NOT (!!) on falsy and truthy values?",
+    code: `console.log(!!"false", !!0, !!"");`,
+    options: [
+      `false false false`,
+      `true false false`,
+      `false true false`,
+      `true true false`
+    ],
+    answer: 1,
+    explanation: `'!!' explicitly converts a value to its boolean equivalent. '"false"' is a non-empty string (truthy, so !! is true). 0 and "" are falsy, so their !! is false.`
+  },
+  {
+    id: 90,
+    topic: "Conditional Expressions",
+    topicKey: "conditionals",
+    diff: "Medium",
+    title: "What does this short-circuit conditional function call log?",
+    code: `let status = false;\nfunction getMsg() {\n  return "System Active";\n}\nconst display = status && getMsg();\nconsole.log(display);`,
+    options: [
+      `"System Active"`,
+      `false`,
+      `undefined`,
+      `null`
+    ],
+    answer: 1,
+    explanation: `In logical AND '&&', if the first operand is falsy, it immediately returns that falsy operand ('false') without evaluating or executing the second operand.`
+  },
+  {
+    id: 91,
+    topic: "Conditional Expressions",
+    topicKey: "conditionals",
+    diff: "Hard",
+    title: "What is logged when destructured parameters use default fallback for null?",
+    code: `function render({ theme } = { theme: "dark" }) {\n  console.log(theme);\n}\nrender({});\nrender();\nrender({ theme: null });`,
+    options: [
+      `"dark" "dark" "dark"`,
+      `undefined "dark" null`,
+      `"dark" "dark" null`,
+      `undefined "dark" "dark"`
+    ],
+    answer: 1,
+    explanation: `In 'render({})', 'theme' property is missing (undefined) and no inner default was set for the property itself, so it logs 'undefined'. In 'render()', the whole object default '{ theme: "dark" }' is used, logging "dark". In 'render({ theme: null })', theme is 'null', which is preserved.`
+  },
+  {
+    id: 92,
+    topic: "Conditional Expressions",
+    topicKey: "conditionals",
+    diff: "Medium",
+    title: "What does this ternary expression return with comma operations?",
+    code: `let x = 1;\nlet y = x > 0 ? (x++, x + 10) : 0;\nconsole.log(x, y);`,
+    options: [
+      `2 12`,
+      `1 11`,
+      `2 11`,
+      `1 0`
+    ],
+    answer: 0,
+    explanation: `'x > 0' is true. The true branch '(x++, x + 10)' executes using the comma operator: 'x++' increments x to 2, then 'x + 10' evaluates to 12. Thus x = 2 and y = 12.`
+  },
+  {
+    id: 93,
+    topic: "Conditional Expressions",
+    topicKey: "conditionals",
+    diff: "Hard",
+    title: "What is the output of checking if (function f() {})?",
+    code: `var f = 1;\nif (function f() {}) {\n  f += typeof f;\n}\nconsole.log(f);`,
+    options: [
+      `"1function"`,
+      `"1number"`,
+      `"1undefined"`,
+      `TypeError`
+    ],
+    answer: 1,
+    explanation: `The condition contains a function expression, which evaluates to a truthy object. However, a function expression does NOT hoist its name 'f' to the outer scope. Inside the if-block, 'f' refers to the outer 'var f = 1' (number). Thus '1 + typeof 1' = '1 + "number"' = "1number".`
+  },
+  {
+    id: 94,
+    topic: "Conditional Expressions",
+    topicKey: "conditionals",
+    diff: "Easy",
+    title: "What is the output of an if statement with no braces and multiple statements?",
+    code: `let val = 10;\nif (val > 20)\n  val = 30;\n  val = 40;\nconsole.log(val);`,
+    options: [
+      `10`,
+      `30`,
+      `40`,
+      `undefined`
+    ],
+    answer: 2,
+    explanation: `Without curly braces, an 'if' statement only controls the single immediately following statement ('val = 30;'). The subsequent statement 'val = 40;' executes unconditionally!`
+  },
+  {
+    id: 95,
+    topic: "Conditional Expressions",
+    topicKey: "conditionals",
+    diff: "Hard",
+    title: "What does this condition log when checking an empty string vs string with whitespace?",
+    code: `console.log(Boolean(""), Boolean(" "), Boolean(" \\t\\n "));`,
+    options: [
+      `false false false`,
+      `false true true`,
+      `true true true`,
+      `false true false`
+    ],
+    answer: 1,
+    explanation: `Only completely empty strings '""' have a length of 0 and are falsy. Any string containing characters—even whitespace like spaces, tabs, or newlines—has a length > 0 and is truthy.`
+  },
+  {
+    id: 96,
+    topic: "Conditional Expressions",
+    topicKey: "conditionals",
+    diff: "Medium",
+    title: "What does this ternary expression return when chaining falsy checks?",
+    code: `const val = 0;\nconst res = val ? "truthy" : val === 0 ? "zero" : "other";\nconsole.log(res);`,
+    options: [
+      `"truthy"`,
+      `"zero"`,
+      `"other"`,
+      `undefined`
+    ],
+    answer: 1,
+    explanation: `'val' is 0, which is falsy, so the first condition branch fails. The next ternary check 'val === 0' is true, returning "zero".`
+  },
+  {
+    id: 97,
+    topic: "Conditional Expressions",
+    topicKey: "conditionals",
+    diff: "Hard",
+    title: "What is the output of labeled break inside a block statement?",
+    code: `let res = "start";\nmyBlock: {\n  res += " A";\n  if (true) break myBlock;\n  res += " B";\n}\nres += " end";\nconsole.log(res);`,
+    options: [
+      `"start A B end"`,
+      `"start A end"`,
+      `"start end"`,
+      `SyntaxError`
+    ],
+    answer: 1,
+    explanation: `JavaScript supports labeled blocks. The statement 'break myBlock;' jumps immediately out of the labeled block, skipping 'res += " B"', and continues execution with 'res += " end"'.`
+  },
+  {
+    id: 98,
+    topic: "Conditional Expressions",
+    topicKey: "conditionals",
+    diff: "Expert",
+    title: "What does switch do when comparing NaN with NaN?",
+    code: `const val = NaN;\nswitch (val) {\n  case NaN:\n    console.log("matched NaN");\n    break;\n  default:\n    console.log("default triggered");\n}`,
+    options: [
+      `"matched NaN"`,
+      `"default triggered"`,
+      `TypeError`,
+      `NaN`
+    ],
+    answer: 1,
+    explanation: `'switch' comparisons use strict equality '==='. In JavaScript, 'NaN === NaN' is always false! Therefore, 'case NaN' will never match, and execution falls through to 'default'.`
+  },
+  {
+    id: 99,
+    topic: "Conditional Expressions",
+    topicKey: "conditionals",
+    diff: "Medium",
+    title: "What is the output of short-circuit assignment in functions?",
+    code: `let config = null;\nfunction getConfig() {\n  return config || (config = { port: 8080 });\n}\nconst c1 = getConfig();\nconfig.port = 9090;\nconst c2 = getConfig();\nconsole.log(c1.port, c2.port);`,
+    options: [
+      `8080 9090`,
+      `9090 9090`,
+      `8080 8080`,
+      `TypeError`
+    ],
+    answer: 1,
+    explanation: `On the first call, 'config' is null, so '(config = { port: 8080 })' runs and assigns the object. On the second call, 'config' is truthy, so 'config' is returned directly. Because both 'c1' and 'c2' reference the exact same object whose port was updated to 9090, both log 9090.`
+  },
+  {
+    id: 100,
+    topic: "Conditional Expressions",
+    topicKey: "conditionals",
+    diff: "Expert",
+    title: "Master Puzzle: Variable scope, type coercion, operators, and conditional flow",
+    code: `var x = 1;\nif (function f() {}) {\n  x += typeof f;\n}\nlet y = (x = "2", +x + 3);\nconst result = y > 4 ? (false ?? "A") : "B";\nconsole.log(result);`,
+    options: [
+      `"A"`,
+      `false`,
+      `"B"`,
+      `5`
+    ],
+    answer: 1,
+    explanation: `Let's break it down step-by-step:\n1. 'if (function f() {})': the function expression is truthy.\n2. Inside 'y = (x = "2", +x + 3)': the comma operator assigns 'x = "2"', then '+x' is 2, and '2 + 3 = 5'. Thus y = 5.\n3. In 'const result = y > 4 ? (false ?? "A") : "B"': 'y > 4' (5 > 4) is true.\n4. 'false ?? "A"': the nullish coalescing operator only falls back on null/undefined. Since 'false' is a boolean primitive, it returns false!`
+  }
+];
+
+/* =========================================================================
+   APPLICATION STATE & PERSISTENCE LOGIC
+   ========================================================================= */
+let currentIndex = 0;
+let userAnswers = {}; // { questionId: selectedOptionIndex }
+let bookmarked = new Set();
+let isPracticeMode = true; // Practice (instant feedback) vs Exam
+let filteredQuestions = [...questions];
+let timerSeconds = 0;
+let timerInterval = null;
+
+// Auth & Database Sync State
+let currentUser = null;
+let authToken = localStorage.getItem('quiz_auth_token') || null;
+let activeAttempt = null;
+let isSyncing = false;
+
+async function init() {
+  // Check if candidate already has an active session
+  authToken = localStorage.getItem('quiz_auth_token');
+  if (authToken) {
+    try {
+      const res = await fetch('/api/me', {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        currentUser = data.user;
+        enterQuizApplication(currentUser);
+        return;
+      }
+    } catch (e) {
+      console.warn('Backend verification failed:', e);
+    }
+  }
+
+  // Not authenticated: lock quiz and display candidate portal
+  showAuthPortalScreen();
+}
+
+/* =========================================================================
+   MANDATORY GATE: SCREEN DISPLAY SWITCHERS
+   ========================================================================= */
+function showAuthPortalScreen() {
+  document.getElementById('auth-portal-screen').style.display = 'flex';
+  document.getElementById('quiz-app-container').style.display = 'none';
+  if (timerInterval) clearInterval(timerInterval);
+}
+
+function enterQuizApplication(user) {
+  currentUser = user;
+  document.getElementById('auth-portal-screen').style.display = 'none';
+  document.getElementById('quiz-app-container').style.display = 'block';
+
+  // Render Candidate Profile Chip
+  const container = document.getElementById('auth-actions');
+  container.innerHTML = `
+    <div class="user-pill">
+      <div class="user-avatar">${escapeHtml(user.name.charAt(0))}</div>
+      <span style="font-weight:600;">${escapeHtml(user.name.split(' ')[0])}</span>
+      <button class="mini-btn" style="margin-left: 6px; padding: 2px 7px;" onclick="handleLogout()" title="Sign Out">Sign Out</button>
+    </div>
+  `;
+
+  // Initialize quiz state and resume active attempt from database
+  loadSavedState();
+  renderGrid();
+  renderCurrentQuestion();
+  updateProgress();
+  startTimer();
+  initActiveAttempt();
+}
+
+function switchPortalTab(tab) {
+  const loginTab = document.getElementById('portal-tab-login');
+  const regTab = document.getElementById('portal-tab-register');
+  const loginForm = document.getElementById('portal-login-form');
+  const regForm = document.getElementById('portal-register-form');
+  const errorBox = document.getElementById('portal-error-box');
+
+  errorBox.style.display = 'none';
+
+  if (tab === 'login') {
+    loginTab.classList.add('active');
+    regTab.classList.remove('active');
+    loginForm.style.display = 'block';
+    regForm.style.display = 'none';
+  } else {
+    regTab.classList.add('active');
+    loginTab.classList.remove('active');
+    regForm.style.display = 'block';
+    loginForm.style.display = 'none';
+  }
+}
+
+async function handlePortalLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById('portal-login-email').value.trim();
+  const password = document.getElementById('portal-login-password').value;
+  const errorBox = document.getElementById('portal-error-box');
+
+  errorBox.style.display = 'none';
+
+  try {
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      errorBox.innerText = data.error || 'Invalid credentials.';
+      errorBox.style.display = 'block';
+      return;
+    }
+
+    localStorage.setItem('quiz_auth_token', data.token);
+    authToken = data.token;
+    enterQuizApplication(data.user);
+    showToast(`Welcome back, ${data.user.name}! Assessment session active.`, 'success');
+  } catch (err) {
+    errorBox.innerText = 'Unable to reach backend server. Please verify server is running.';
+    errorBox.style.display = 'block';
+  }
+}
+
+async function handlePortalRegister(e) {
+  e.preventDefault();
+  const name = document.getElementById('portal-reg-name').value.trim();
+  const email = document.getElementById('portal-reg-email').value.trim();
+  const password = document.getElementById('portal-reg-password').value;
+  const confirmPassword = document.getElementById('portal-reg-confirm').value;
+  const errorBox = document.getElementById('portal-error-box');
+
+  errorBox.style.display = 'none';
+
+  if (password !== confirmPassword) {
+    errorBox.innerText = 'Passwords do not match.';
+    errorBox.style.display = 'block';
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password })
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      errorBox.innerText = data.error || 'Registration failed.';
+      errorBox.style.display = 'block';
+      return;
+    }
+
+    localStorage.setItem('quiz_auth_token', data.token);
+    authToken = data.token;
+    enterQuizApplication(data.user);
+    showToast(`Account registered! Welcome, ${data.user.name}!`, 'success');
+  } catch (err) {
+    errorBox.innerText = 'Unable to reach backend server. Please verify server is running.';
+    errorBox.style.display = 'block';
+  }
+}
+
+async function handleLogout() {
+  if (!confirm('Are you sure you want to sign out? Your saved responses will remain safely in the database.')) {
+    return;
+  }
+
+  try {
+    if (authToken) {
+      await fetch('/api/logout', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+    }
+  } catch (e) {}
+
+  localStorage.removeItem('quiz_auth_token');
+  authToken = null;
+  currentUser = null;
+  activeAttempt = null;
+  userAnswers = {};
+  bookmarked.clear();
+
+  showAuthPortalScreen();
+  showToast('Signed out. Authentication required to access the assessment.', 'info');
+}
+
+/* =========================================================================
+   DATABASE PERSISTENCE: ATTEMPTS & RESPONSES
+   ========================================================================= */
+async function initActiveAttempt(isNewAccount = false) {
+  if (!authToken) return;
+
+  try {
+    updateSyncBadge('syncing', 'Connecting to Database...');
+    const res = await fetch('/api/attempts/active', {
+      method: 'POST',
+      headers: { 
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type': 'application/json' 
+      }
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      activeAttempt = data.attempt;
+
+      // Merge saved answers from the database
+      if (data.savedAnswers && Object.keys(data.savedAnswers).length > 0) {
+        for (const [qid, ansIdx] of Object.entries(data.savedAnswers)) {
+          userAnswers[Number(qid)] = ansIdx;
+        }
+        saveState();
+        renderGrid();
+        renderCurrentQuestion();
+        updateProgress();
+      }
+
+      // If user had answers in local storage before logging in, sync them to SQLite
+      const localKeys = Object.keys(userAnswers);
+      if (localKeys.length > 0 && (!data.savedAnswers || Object.keys(data.savedAnswers).length < localKeys.length)) {
+        await syncAllLocalAnswersToDb();
+      }
+
+      updateSyncBadge('synced', 'Synced with DB ✓');
+    }
+  } catch (err) {
+    console.error('Failed to init active attempt:', err);
+    updateSyncBadge('guest', 'Local Mode (DB Unavailable)');
+  }
+}
+
+async function syncAllLocalAnswersToDb() {
+  if (!authToken || !activeAttempt) return;
+
+  const entries = Object.entries(userAnswers);
+  for (const [qidStr, optIdx] of entries) {
+    const qid = Number(qidStr);
+    const q = questions.find(item => item.id === qid);
+    if (!q) continue;
+
+    try {
+      await fetch('/api/responses/save', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          attemptId: activeAttempt.id,
+          questionId: qid,
+          topic: q.topic,
+          difficulty: q.diff,
+          userAnswer: optIdx,
+          correctAnswer: q.answer
+        })
+      });
+    } catch (e) {}
+  }
+}
+
+async function syncResponseToDb(qid, optIndex) {
+  if (!authToken || !activeAttempt) return;
+
+  const q = questions.find(item => item.id === qid);
+  if (!q) return;
+
+  updateSyncBadge('syncing', 'Saving to Database...');
+
+  try {
+    const res = await fetch('/api/responses/save', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        attemptId: activeAttempt.id,
+        questionId: qid,
+        topic: q.topic,
+        difficulty: q.diff,
+        userAnswer: optIndex,
+        correctAnswer: q.answer
+      })
+    });
+
+    if (res.ok) {
+      updateSyncBadge('synced', 'Saved to DB ✓');
+    } else {
+      updateSyncBadge('guest', 'Save Failed (Will retry)');
+    }
+  } catch (err) {
+    console.error('Error saving response to DB:', err);
+    updateSyncBadge('guest', 'Local Only (Offline)');
+  }
+}
+
+async function finalizeAssessment() {
+  if (!currentUser) {
+    showAuthPortalScreen();
+    return;
+  }
+
+  if (!activeAttempt) {
+    await initActiveAttempt();
+  }
+
+  const answeredCount = Object.keys(userAnswers).length;
+  if (!confirm(`You have answered ${answeredCount} of 100 questions. Would you like to finalize this assessment and record it permanently in the database?`)) {
+    return;
+  }
+
+  try {
+    updateSyncBadge('syncing', 'Finalizing in Database...');
+    const res = await fetch('/api/attempts/complete', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        attemptId: activeAttempt.id,
+        timeTakenSeconds: timerSeconds
+      })
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      updateSyncBadge('synced', 'Assessment Recorded ✓');
+      showToast(`Assessment submitted! Score: ${data.score}/100 (${data.percentage}%)`, 'success');
+      
+      // Update modal display
+      document.getElementById('score-modal').style.display = 'none';
+      openHistoryModal();
+    } else {
+      showToast(data.error || 'Failed to finalize assessment.', 'error');
+    }
+  } catch (err) {
+    showToast('Network error while finalizing assessment.', 'error');
+  }
+}
+
+/* =========================================================================
+   HISTORY & LEADERBOARD MODALS
+   ========================================================================= */
+async function openHistoryModal() {
+  const modal = document.getElementById('history-modal');
+  const content = document.getElementById('history-content');
+  modal.style.display = 'flex';
+
+  if (!currentUser) {
+    showAuthPortalScreen();
+    return;
+  }
+
+  content.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 24px;">Fetching your records from database...</div>`;
+
+  try {
+    const res = await fetch('/api/attempts/history', {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    const data = await res.json();
+
+    if (!data.history || data.history.length === 0) {
+      content.innerHTML = `
+        <div style="text-align:center; padding: 24px; color: var(--text-muted);">
+          <p>No completed assessments recorded yet.</p>
+          <p style="font-size:0.85rem; margin-top:8px;">Answer questions and click <strong>"Submit & Save to Database"</strong> in the Summary modal to record your score!</p>
+        </div>
+      `;
+      return;
+    }
+
+    let rowsHtml = '';
+    data.history.forEach((h, idx) => {
+      const dateStr = new Date(h.started_at).toLocaleString();
+      const statusBadge = h.status === 'completed' 
+        ? `<span class="badge" style="background:var(--success-glow); color:var(--success); border:1px solid var(--success);">Completed</span>`
+        : `<span class="badge" style="background:var(--accent-glow); color:var(--accent); border:1px solid var(--accent);">In Progress</span>`;
+      
+      const mins = Math.floor((h.time_taken_seconds || 0) / 60);
+      const secs = (h.time_taken_seconds || 0) % 60;
+      const durationStr = `${mins}m ${secs}s`;
+
+      rowsHtml += `
+        <tr>
+          <td>#${h.id}</td>
+          <td>${dateStr}</td>
+          <td>${statusBadge}</td>
+          <td style="font-weight:700; color:var(--text-bright);">${h.score} / ${h.total_questions}</td>
+          <td style="color:${h.percentage >= 70 ? 'var(--success)' : h.percentage >= 40 ? 'var(--warning)' : 'var(--danger)'}; font-weight:700;">${h.percentage}%</td>
+          <td>${durationStr}</td>
+          <td>
+            <button class="mini-btn" onclick="viewAttemptResponses(${h.id})">Inspect Answers</button>
+          </td>
+        </tr>
+      `;
+    });
+
+    content.innerHTML = `
+      <table class="breakdown-table">
+        <thead>
+          <tr>
+            <th>Attempt</th>
+            <th>Date & Time</th>
+            <th>Status</th>
+            <th>Score</th>
+            <th>Accuracy</th>
+            <th>Duration</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+      <div id="attempt-detail-view" style="display:none; margin-top:16px;"></div>
+    `;
+  } catch (err) {
+    content.innerHTML = `<div style="color:var(--danger); padding:16px;">Failed to load history from database.</div>`;
+  }
+}
+
+async function viewAttemptResponses(attemptId) {
+  const detailContainer = document.getElementById('attempt-detail-view');
+  detailContainer.style.display = 'block';
+  detailContainer.innerHTML = `<div style="color:var(--text-muted); padding:12px;">Loading question responses for Attempt #${attemptId}...</div>`;
+
+  try {
+    const res = await fetch(`/api/attempts/${attemptId}/details`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    const data = await res.json();
+
+    if (!data.responses || data.responses.length === 0) {
+      detailContainer.innerHTML = `<div style="color:var(--text-muted); padding:12px;">No recorded responses for this attempt.</div>`;
+      return;
+    }
+
+    let itemsHtml = '';
+    data.responses.forEach(r => {
+      const q = questions.find(item => item.id === r.question_id);
+      const qTitle = q ? q.title : `Question #${r.question_id}`;
+      const userOpt = q && q.options[r.user_answer] ? q.options[r.user_answer] : `Option ${r.user_answer}`;
+      const correctOpt = q && q.options[r.correct_answer] ? q.options[r.correct_answer] : `Option ${r.correct_answer}`;
+      const isCorrect = r.is_correct === 1;
+
+      itemsHtml += `
+        <div style="background:var(--panel-bg); border:1px solid ${isCorrect ? 'var(--success)' : 'var(--danger)'}; border-radius:6px; padding:10px 14px; margin-bottom:8px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+            <strong>Q#${r.question_id}: ${escapeHtml(qTitle.substring(0, 70))}...</strong>
+            <span class="badge" style="background:${isCorrect ? 'var(--success-glow)' : 'var(--danger-glow)'}; color:${isCorrect ? 'var(--success)' : 'var(--danger)'};">
+              ${isCorrect ? '✓ Correct' : '✗ Incorrect'}
+            </span>
+          </div>
+          <div style="font-size:0.82rem; color:var(--text-muted);">
+            Your Answer: <span style="color:${isCorrect ? 'var(--success)' : 'var(--danger)'}; font-family:var(--font-code);">${escapeHtml(userOpt)}</span> | 
+            Correct: <span style="color:var(--success); font-family:var(--font-code);">${escapeHtml(correctOpt)}</span>
+          </div>
+        </div>
+      `;
+    });
+
+    detailContainer.innerHTML = `
+      <div style="border-top:1px solid var(--border); padding-top:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <h3 style="font-size:1.05rem; color:var(--text-bright);">Detailed Responses for Attempt #${attemptId}</h3>
+          <button class="mini-btn" onclick="document.getElementById('attempt-detail-view').style.display='none'">Hide</button>
+        </div>
+        <div style="max-height: 250px; overflow-y: auto;">${itemsHtml}</div>
+      </div>
+    `;
+  } catch (err) {
+    detailContainer.innerHTML = `<div style="color:var(--danger); padding:12px;">Failed to load attempt responses.</div>`;
+  }
+}
+
+async function openLeaderboardModal() {
+  const modal = document.getElementById('leaderboard-modal');
+  const content = document.getElementById('leaderboard-content');
+  modal.style.display = 'flex';
+  content.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:24px;">Loading leaderboard rankings...</div>`;
+
+  try {
+    const res = await fetch('/api/leaderboard');
+    const data = await res.json();
+
+    if (!data.leaderboard || data.leaderboard.length === 0) {
+      content.innerHTML = `
+        <div style="text-align:center; padding:24px; color:var(--text-muted);">
+          <p>No leaderboard scores yet!</p>
+          <p style="font-size:0.85rem; margin-top:8px;">Be the first registered user to complete the quiz and claim the #1 spot!</p>
+        </div>
+      `;
+      return;
+    }
+
+    let rowsHtml = '';
+    const medals = ['🥇', '🥈', '🥉'];
+    data.leaderboard.forEach((user, idx) => {
+      const rank = idx < 3 ? `${medals[idx]} #${idx + 1}` : `#${idx + 1}`;
+      const mins = Math.floor((user.best_time || 0) / 60);
+      const secs = (user.best_time || 0) % 60;
+      const timeStr = `${mins}m ${secs}s`;
+
+      rowsHtml += `
+        <tr>
+          <td style="font-weight:700; font-size:1rem;">${rank}</td>
+          <td style="color:var(--text-bright); font-weight:600;">${escapeHtml(user.name)}</td>
+          <td style="font-weight:700; color:var(--accent);">${user.top_score} / 100</td>
+          <td style="color:var(--success); font-weight:700;">${user.top_percentage}%</td>
+          <td>${timeStr}</td>
+        </tr>
+      `;
+    });
+
+    content.innerHTML = `
+      <table class="breakdown-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Candidate</th>
+            <th>Top Score</th>
+            <th>Accuracy</th>
+            <th>Duration</th>
+          </tr>
+        </thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+    `;
+  } catch (err) {
+    content.innerHTML = `<div style="color:var(--danger); padding:16px;">Failed to load leaderboard.</div>`;
+  }
+}
+
+async function openCandidateStatsModal() {
+  const modal = document.getElementById('candidate-stats-modal');
+  const content = document.getElementById('candidate-stats-content');
+  modal.style.display = 'flex';
+
+  if (!currentUser) {
+    showAuthPortalScreen();
+    return;
+  }
+
+  content.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 30px;">Computing your real-time analytics...</div>`;
+
+  try {
+    const res = await fetch('/api/candidate/stats', {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      content.innerHTML = `<div style="color: var(--danger); padding: 20px;">${escapeHtml(data.error || 'Failed to load stats.')}</div>`;
+      return;
+    }
+
+    const { overview, pacing, topicStats, diffStats, strengths, weaknesses, recentAttempts } = data;
+
+    // Render KPI Cards
+    let kpiHtml = `
+      <div class="stats-bar" style="margin-bottom: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px;">
+        <div class="stat-box" style="border-top: 3px solid #f7df1e;">
+          <div class="stat-val" style="color: #f7df1e;">#${overview.rank} <span style="font-size: 0.85rem; color: var(--text-muted);">/ ${overview.totalRanked}</span></div>
+          <div class="stat-label">Global Rank</div>
+        </div>
+        <div class="stat-box" style="border-top: 3px solid var(--success);">
+          <div class="stat-val" style="color: var(--success);">${overview.highScore} <span style="font-size: 0.85rem; color: var(--text-muted);">/ 100</span></div>
+          <div class="stat-label">Best Score (${overview.avgPercentage}% avg)</div>
+        </div>
+        <div class="stat-box" style="border-top: 3px solid var(--accent);">
+          <div class="stat-val" style="color: var(--accent);">${overview.accuracy}%</div>
+          <div class="stat-label">Accuracy (${overview.totalCorrect}/${overview.totalAnswered})</div>
+        </div>
+        <div class="stat-box" style="border-top: 3px solid #a371f7;">
+          <div class="stat-val" style="color: #a371f7;">${pacing.avgSecondsPerQuestion}s</div>
+          <div class="stat-label">Speed (${pacing.pace})</div>
+        </div>
+      </div>
+    `;
+
+    // Strengths & Weaknesses badges
+    let strengthsHtml = '';
+    if (strengths && strengths.length > 0) {
+      strengthsHtml = strengths.map(s => `
+        <span class="badge" style="background: var(--success-glow); color: var(--success); border: 1px solid var(--success); padding: 4px 10px; font-size: 0.82rem;">
+          ⭐ ${escapeHtml(s.topic)} (${s.percentage}%)
+        </span>
+      `).join(' ');
+    } else {
+      strengthsHtml = `<span style="color: var(--text-muted); font-size: 0.85rem;">Answer more questions to identify top strengths</span>`;
+    }
+
+    let weaknessesHtml = '';
+    if (weaknesses && weaknesses.length > 0) {
+      weaknessesHtml = weaknesses.map(w => `
+        <span class="badge" style="background: var(--danger-glow); color: var(--danger); border: 1px solid var(--danger); padding: 4px 10px; font-size: 0.82rem;">
+          ⚠️ ${escapeHtml(w.topic)} (${w.percentage}%)
+        </span>
+      `).join(' ');
+    } else {
+      weaknessesHtml = `<span style="color: var(--text-muted); font-size: 0.85rem;">No critical problem topics detected</span>`;
+    }
+
+    const insightsHtml = `
+      <div style="background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; margin-bottom: 20px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div>
+            <div style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px;">Key Strengths</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px;">${strengthsHtml}</div>
+          </div>
+          <div>
+            <div style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px;">Recommended Focus</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px;">${weaknessesHtml}</div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Topic Competency Breakdown
+    let topicRows = '';
+    topicStats.forEach(t => {
+      const color = t.percentage >= 70 ? 'var(--success)' : (t.percentage >= 50 ? 'var(--warning)' : 'var(--danger)');
+      topicRows += `
+        <tr>
+          <td style="font-weight: 600; color: var(--text-bright);">${escapeHtml(t.topic)}</td>
+          <td>${t.correct} / ${t.answered} answered</td>
+          <td style="width: 35%;">
+            <div class="progress-track" style="margin: 0; height: 10px; background: rgba(255,255,255,0.08);">
+              <div class="progress-fill" style="width: ${t.percentage}%; background: ${color};"></div>
+            </div>
+          </td>
+          <td style="font-weight: 700; color: ${color}; text-align: right;">${t.percentage}%</td>
+        </tr>
+      `;
+    });
+
+    const topicTableHtml = `
+      <div style="margin-bottom: 20px;">
+        <h3 style="font-size: 1rem; color: var(--text-bright); margin-bottom: 10px;">Topic Mastery & Competency</h3>
+        <table class="breakdown-table">
+          <thead>
+            <tr>
+              <th>Domain</th>
+              <th>Score</th>
+              <th>Progress</th>
+              <th style="text-align: right;">Mastery</th>
+            </tr>
+          </thead>
+          <tbody>${topicRows || '<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No responses recorded yet.</td></tr>'}</tbody>
+        </table>
+      </div>
+    `;
+
+    // Difficulty Matrix
+    let diffCards = '';
+    const diffBadgeStyles = {
+      Easy: { color: 'var(--success)', border: 'rgba(63, 185, 80, 0.4)' },
+      Medium: { color: 'var(--warning)', border: 'rgba(210, 153, 34, 0.4)' },
+      Hard: { color: 'var(--danger)', border: 'rgba(248, 81, 73, 0.4)' },
+      Expert: { color: '#a371f7', border: 'rgba(163, 113, 247, 0.4)' }
+    };
+
+    diffStats.forEach(d => {
+      const style = diffBadgeStyles[d.difficulty] || { color: 'var(--accent)', border: 'var(--border)' };
+      diffCards += `
+        <div style="background: var(--panel-bg); border: 1px solid ${style.border}; border-radius: 8px; padding: 12px; text-align: center;">
+          <div style="font-weight: 700; color: ${style.color}; font-size: 0.85rem; text-transform: uppercase;">${d.difficulty}</div>
+          <div style="font-size: 1.35rem; font-weight: 800; color: var(--text-bright); margin: 4px 0;">${d.percentage}%</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">${d.correct} / ${d.answered} correct</div>
+        </div>
+      `;
+    });
+
+    const diffHtml = `
+      <div style="margin-bottom: 20px;">
+        <h3 style="font-size: 1rem; color: var(--text-bright); margin-bottom: 10px;">Difficulty Performance Matrix</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px;">
+          ${diffCards}
+        </div>
+      </div>
+    `;
+
+    content.innerHTML = kpiHtml + insightsHtml + topicTableHtml + diffHtml;
+  } catch (err) {
+    content.innerHTML = `<div style="color: var(--danger); padding: 20px;">Network error while fetching candidate analytics.</div>`;
+  }
+}
+
+/* =========================================================================
+   UI HELPERS & NOTIFICATIONS
+   ========================================================================= */
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  
+  const icon = type === 'success' ? '✓' : type === 'error' ? '⚠' : 'ℹ';
+  toast.innerHTML = `<span>${icon}</span> <span>${escapeHtml(message)}</span>`;
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(10px)';
+    toast.style.transition = 'all 0.3s ease';
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
+}
+
+/* =========================================================================
+   CORE QUIZ FUNCTIONS
+   ========================================================================= */
+function startTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timerSeconds++;
+    const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+    const secs = String(timerSeconds % 60).padStart(2, '0');
+    document.getElementById('timer-display').innerText = `${mins}:${secs}`;
+  }, 1000);
+}
+
+function loadSavedState() {
+  try {
+    const savedAns = localStorage.getItem('jsquiz_answers');
+    if (savedAns) userAnswers = JSON.parse(savedAns);
+    const savedBm = localStorage.getItem('jsquiz_bookmarks');
+    if (savedBm) bookmarked = new Set(JSON.parse(savedBm));
+  } catch (e) {}
+}
+
+function saveState() {
+  try {
+    localStorage.setItem('jsquiz_answers', JSON.stringify(userAnswers));
+    localStorage.setItem('jsquiz_bookmarks', JSON.stringify([...bookmarked]));
+  } catch (e) {}
+}
+
+function renderGrid() {
+  const grid = document.getElementById('question-grid');
+  grid.innerHTML = '';
+  
+  filteredQuestions.forEach((q) => {
+    const btn = document.createElement('button');
+    btn.className = 'grid-btn';
+    btn.innerText = q.id;
+    if (q.id === questions[currentIndex].id) btn.classList.add('active');
+    if (bookmarked.has(q.id)) btn.classList.add('bookmarked');
+    
+    if (userAnswers[q.id] !== undefined) {
+      if (userAnswers[q.id] === q.answer) {
+        btn.classList.add('correct');
+      } else {
+        btn.classList.add('incorrect');
+      }
+    }
+
+    btn.onclick = () => {
+      const targetIdx = questions.findIndex(item => item.id === q.id);
+      if (targetIdx !== -1) {
+        currentIndex = targetIdx;
+        renderCurrentQuestion();
+      }
+    };
+    grid.appendChild(btn);
+  });
+
+  document.getElementById('filtered-count').innerText = `${filteredQuestions.length} shown`;
+}
+
+function renderCurrentQuestion() {
+  const q = questions[currentIndex];
+  document.getElementById('q-number').innerText = `Question #${q.id} of 100`;
+  document.getElementById('q-topic').innerText = q.topic;
+  
+  const diffBadge = document.getElementById('q-diff');
+  diffBadge.innerText = q.diff;
+  diffBadge.className = `badge badge-diff-${q.diff.toLowerCase()}`;
+  
+  document.getElementById('q-title').innerText = q.title;
+  document.getElementById('q-code').innerText = q.code;
+  
+  // Console output reset
+  const consoleBox = document.getElementById('console-output');
+  consoleBox.style.display = 'none';
+  consoleBox.innerText = '';
+
+  // Render options
+  const optList = document.getElementById('options-list');
+  optList.innerHTML = '';
+
+  const selectedOpt = userAnswers[q.id];
+  const answered = selectedOpt !== undefined;
+
+  q.options.forEach((optText, optIdx) => {
+    const optDiv = document.createElement('div');
+    optDiv.className = 'option-item';
+    
+    if (selectedOpt === optIdx) optDiv.classList.add('selected');
+    
+    if (answered && isPracticeMode) {
+      if (optIdx === q.answer) {
+        optDiv.classList.add('correct');
+      } else if (optIdx === selectedOpt) {
+        optDiv.classList.add('incorrect');
+      }
+    }
+
+    optDiv.innerHTML = `
+      <input type="radio" class="option-radio" name="opt" ${selectedOpt === optIdx ? 'checked' : ''}>
+      <span class="option-text">${escapeHtml(optText)}</span>
+    `;
+
+    optDiv.onclick = () => selectOption(q.id, optIdx);
+    optList.appendChild(optDiv);
+  });
+
+  // Explanation box
+  const expBox = document.getElementById('explanation-box');
+  if (answered && isPracticeMode) {
+    expBox.style.display = 'block';
+    document.getElementById('explanation-text').innerText = q.explanation;
+  } else {
+    expBox.style.display = 'none';
+  }
+
+  // Bookmark button state
+  const bmBtn = document.getElementById('btn-bookmark');
+  if (bookmarked.has(q.id)) {
+    bmBtn.innerText = '★ Bookmarked';
+    bmBtn.style.color = 'var(--warning)';
+  } else {
+    bmBtn.innerText = '☆ Bookmark';
+    bmBtn.style.color = 'var(--text-bright)';
+  }
+
+  document.getElementById('q-index-indicator').innerText = `${currentIndex + 1} of ${questions.length}`;
+  document.getElementById('btn-prev').disabled = currentIndex === 0;
+  document.getElementById('btn-next').disabled = currentIndex === questions.length - 1;
+
+  renderGrid();
+}
+
+function selectOption(qid, optIndex) {
+  userAnswers[qid] = optIndex;
+  saveState();
+  renderCurrentQuestion();
+  updateProgress();
+
+  // Real-time Database Persistence
+  syncResponseToDb(qid, optIndex);
+}
+
+function navigateQuestion(delta) {
+  const newIdx = currentIndex + delta;
+  if (newIdx >= 0 && newIdx < questions.length) {
+    currentIndex = newIdx;
+    renderCurrentQuestion();
+  }
+}
+
+function toggleCurrentBookmark() {
+  const qid = questions[currentIndex].id;
+  if (bookmarked.has(qid)) {
+    bookmarked.delete(qid);
+  } else {
+    bookmarked.add(qid);
+  }
+  saveState();
+  renderCurrentQuestion();
+}
+
+function toggleQuizMode() {
+  isPracticeMode = !isPracticeMode;
+  const btn = document.getElementById('btn-mode-toggle');
+  if (isPracticeMode) {
+    btn.innerText = 'Mode: Practice (Instant)';
+  } else {
+    btn.innerText = 'Mode: Exam (Hidden Feedback)';
+  }
+  renderCurrentQuestion();
+}
+
+function updateProgress() {
+  const total = questions.length;
+  const answeredKeys = Object.keys(userAnswers);
+  const answeredCount = answeredKeys.length;
+
+  let correctCount = 0;
+  answeredKeys.forEach(qid => {
+    const q = questions.find(item => item.id == qid);
+    if (q && userAnswers[qid] === q.answer) correctCount++;
+  });
+
+  document.getElementById('stat-answered').innerText = `${answeredCount}/${total}`;
+  const accuracy = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
+  document.getElementById('stat-score').innerText = `${accuracy}%`;
+
+  const progressPercent = (answeredCount / total) * 100;
+  document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+}
+
+function runSandboxCode() {
+  const q = questions[currentIndex];
+  const consoleBox = document.getElementById('console-output');
+  consoleBox.style.display = 'block';
+  consoleBox.innerText = 'Running...\n';
+
+  const logs = [];
+  const fakeConsole = {
+    log: (...args) => logs.push(args.map(a => formatOutput(a)).join(' ')),
+    error: (...args) => logs.push('[ERROR] ' + args.map(a => formatOutput(a)).join(' ')),
+    warn: (...args) => logs.push('[WARN] ' + args.map(a => formatOutput(a)).join(' '))
+  };
+
+  try {
+    const sandboxFn = new Function('console', q.code);
+    sandboxFn(fakeConsole);
+    consoleBox.innerText = logs.length > 0 ? logs.join('\n') : '[Code completed with no console output]';
+  } catch (err) {
+    consoleBox.innerText = `${err.name}: ${err.message}`;
+  }
+}
+
+function formatOutput(val) {
+  if (typeof val === 'string') return `"${val}"`;
+  if (typeof val === 'object' && val !== null) {
+    try { return JSON.stringify(val); } catch(e) { return String(val); }
+  }
+  return String(val);
+}
+
+function copySnippet() {
+  const code = questions[currentIndex].code;
+  navigator.clipboard.writeText(code).then(() => {
+    showToast('Snippet copied to clipboard!', 'info');
+  });
+}
+
+function applyFilters() {
+  const topic = document.getElementById('filter-topic').value;
+  const diff = document.getElementById('filter-diff').value;
+  const search = document.getElementById('filter-search').value.toLowerCase().trim();
+
+  filteredQuestions = questions.filter(q => {
+    if (topic !== 'all' && q.topicKey !== topic) return false;
+    if (diff !== 'all' && q.diff !== diff) return false;
+    if (search) {
+      const matchTitle = q.title.toLowerCase().includes(search);
+      const matchCode = q.code.toLowerCase().includes(search);
+      const matchExp = q.explanation.toLowerCase().includes(search);
+      if (!matchTitle && !matchCode && !matchExp) return false;
+    }
+    return true;
+  });
+
+  renderGrid();
+}
+
+function showScoreModal() {
+  const modal = document.getElementById('score-modal');
+  modal.style.display = 'flex';
+
+  const answeredKeys = Object.keys(userAnswers);
+  const total = questions.length;
+  let correctCount = 0;
+
+  const topicStats = {};
+  questions.forEach(q => {
+    if (!topicStats[q.topic]) topicStats[q.topic] = { total: 0, answered: 0, correct: 0 };
+    topicStats[q.topic].total++;
+    if (userAnswers[q.id] !== undefined) {
+      topicStats[q.topic].answered++;
+      if (userAnswers[q.id] === q.answer) {
+        topicStats[q.topic].correct++;
+        correctCount++;
+      }
+    }
+  });
+
+  document.getElementById('modal-answered').innerText = `${answeredKeys.length}/${total}`;
+  const accuracy = answeredKeys.length > 0 ? Math.round((correctCount / answeredKeys.length) * 100) : 0;
+  document.getElementById('modal-score').innerText = `${accuracy}%`;
+
+  const tbody = document.getElementById('breakdown-body');
+  tbody.innerHTML = '';
+
+  for (const [topicName, data] of Object.entries(topicStats)) {
+    const tr = document.createElement('tr');
+    const topicAcc = data.answered > 0 ? Math.round((data.correct / data.answered) * 100) : 0;
+    tr.innerHTML = `
+      <td>${topicName}</td>
+      <td>${data.answered} / ${data.total}</td>
+      <td style="color: ${topicAcc >= 70 ? 'var(--success)' : topicAcc >= 40 ? 'var(--warning)' : 'var(--danger)'}">
+        ${topicAcc}% (${data.correct} correct)
+      </td>
+    `;
+    tbody.appendChild(tr);
+  }
+}
+
+function filterByIncorrect() {
+  document.getElementById('score-modal').style.display = 'none';
+  filteredQuestions = questions.filter(q => userAnswers[q.id] !== undefined && userAnswers[q.id] !== q.answer);
+  renderGrid();
+  if (filteredQuestions.length > 0) {
+    currentIndex = questions.findIndex(q => q.id === filteredQuestions[0].id);
+    renderCurrentQuestion();
+  } else {
+    showToast('No incorrect questions to review! Great job!', 'success');
+  }
+}
+
+function resetQuiz() {
+  if (confirm("Are you sure you want to reset all answers and bookmarks?")) {
+    userAnswers = {};
+    bookmarked.clear();
+    localStorage.removeItem('jsquiz_answers');
+    localStorage.removeItem('jsquiz_bookmarks');
+    currentIndex = 0;
+    renderCurrentQuestion();
+    updateProgress();
+    showToast('Quiz reset.', 'info');
+  }
+}
+
+function closeModalOnOuter(e) {
+  if (e.target.classList.contains('modal-overlay')) {
+    e.target.style.display = 'none';
+  }
+}
+
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+window.onload = init;
+</script>
+</body>
+</html>

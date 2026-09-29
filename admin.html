@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restricted Admin Portal - Quiz Database</title>
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --card-bg: #161b22;
+      --panel-bg: #21262d;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --text-bright: #f0f6fc;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --accent-glow: rgba(88, 166, 255, 0.15);
+      --success: #3fb950;
+      --success-glow: rgba(63, 185, 80, 0.2);
+      --danger: #f85149;
+      --danger-glow: rgba(248, 81, 73, 0.2);
+      --warning: #d29922;
+      --font-code: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    /* Admin Login Gateway */
+    #admin-login-view {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 85vh;
+      padding: 20px;
+    }
+    .login-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 440px;
+      padding: 32px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+      border-top: 3px solid var(--danger);
+      text-align: center;
+    }
+    .shield-icon {
+      font-size: 2.4rem;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+    .login-card h2 {
+      color: var(--text-bright);
+      font-size: 1.5rem;
+      margin-bottom: 6px;
+    }
+    .login-card p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-bottom: 24px;
+      line-height: 1.4;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .form-input {
+      width: 100%;
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      color: var(--text-bright);
+      padding: 11px 14px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .form-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .alert-box {
+      background: var(--danger-glow);
+      border: 1px solid var(--danger);
+      color: #ff7b72;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 0.84rem;
+      margin-bottom: 16px;
+      text-align: left;
+      display: none;
+    }
+
+    /* Dashboard Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .badge-admin {
+      background: rgba(248, 81, 73, 0.15);
+      color: #ff7b72;
+      border: 1px solid rgba(248, 81, 73, 0.35);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-family: var(--font-code);
+      font-weight: 700;
+      font-size: 0.82rem;
+    }
+
+    .btn {
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      color: var(--text-bright);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      cursor: pointer;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn:hover { background: #30363d; border-color: #8b949e; }
+    .btn-primary { background: #238636; border-color: #2ea043; color: #fff; }
+    .btn-primary:hover { background: #2ea043; }
+    .btn-danger { background: rgba(248, 81, 73, 0.15); border-color: var(--danger); color: #ff7b72; }
+    .btn-danger:hover { background: var(--danger); color: #fff; }
+
+    /* Privacy Banner */
+    .privacy-notice {
+      background: rgba(56, 139, 253, 0.08);
+      border: 1px solid rgba(56, 139, 253, 0.25);
+      border-radius: 8px;
+      padding: 12px 18px;
+      margin-bottom: 20px;
+      font-size: 0.84rem;
+      color: #79c0ff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Stats Grid */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+    }
+    .stat-card .val {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-bright);
+    }
+    .stat-card .label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 4px;
+    }
+
+    /* Tabs */
+    .tab-bar {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      gap: 8px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 10px 18px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tab-btn:hover { color: var(--text-bright); }
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .tab-count {
+      background: var(--panel-bg);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 2px 7px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    /* Controls Bar */
+    .table-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .search-input {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text-bright);
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      width: 320px;
+      outline: none;
+    }
+    .search-input:focus { border-color: var(--accent); }
+
+    /* Tables */
+    .table-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+    th, td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      background: var(--panel-bg);
+      color: var(--text-bright);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    tr:hover { background: rgba(255, 255, 255, 0.02); }
+    .code-cell {
+      font-family: var(--font-code);
+      font-size: 0.8rem;
+      color: #79c0ff;
+    }
+    .badge {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+      display: inline-block;
+    }
+    .badge-success { background: var(--success-glow); color: var(--success); border: 1px solid var(--success); }
+    .badge-danger { background: var(--danger-glow); color: var(--danger); border: 1px solid var(--danger); }
+    .badge-warning { background: rgba(210, 153, 34, 0.2); color: var(--warning); border: 1px solid var(--warning); }
+    .badge-info { background: var(--accent-glow); color: var(--accent); border: 1px solid var(--accent); }
+
+    .empty-state {
+      padding: 40px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- 1. LOCKED GATEWAY SCREEN -->
+  <div id="admin-login-view">
+    <div class="login-card">
+      <div class="shield-icon">🛡️</div>
+      <h2>Restricted Admin Gateway</h2>
+      <p>Authorized proctors & administrators only. Enter your administrator passkey to inspect database telemetry.</p>
+
+      <div id="login-error-alert" class="alert-box"></div>
+
+      <form id="admin-login-form" onsubmit="handleAdminLogin(event)">
+        <div class="form-group">
+          <label for="admin-passkey-input">Administrator Secret Passkey</label>
+          <input type="password" id="admin-passkey-input" class="form-input" placeholder="Enter passkey..." required autofocus>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 11px;">
+          Authenticate & Unlock Console →
+        </button>
+      </form>
+
+      <div style="margin-top: 20px; font-size: 0.82rem;">
+        <a href="/" style="color: var(--text-muted); text-decoration: none;">← Return to Candidate Portal</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. SECURE DASHBOARD VIEW (LOCKED UNTIL AUTHENTICATED) -->
+  <div id="admin-dashboard-view" style="display: none;">
+    <header>
+      <div class="brand-title">
+        <span class="badge-admin">🔒 AUTHORIZED SESSION</span>
+        <div>
+          <h1 style="font-size: 1.35rem; color: var(--text-bright);">Database Explorer & Privacy Console</h1>
+          <p style="font-size: 0.82rem; color: var(--text-muted);" id="db-filepath">Protected SQLite Data Store</p>
+        </div>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+        <button class="btn btn-primary" onclick="loadDatabaseData()">↻ Refresh Records</button>
+        <button class="btn" onclick="exportDataJson()">📥 Export JSON</button>
+        <button class="btn btn-danger" onclick="handleAdminLogout()">Log Out Admin</button>
+        <a href="/" class="btn">Candidate Portal</a>
+      </div>
+    </header>
+
+    <div class="privacy-notice">
+      🛡️ <strong>Zero Data Exposure Policy:</strong> Candidate passwords and raw session tokens are masked to prevent session hijacking and credential harvesting.
+    </div>
+
+    <!-- Overview Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="val" id="stat-users">0</div>
+        <div class="label">Registered Candidates (users)</div>
+      </div>
+      <div class="stat-card">
+        <div class="val" id="stat-attempts">0</div>
+        <div class="label">Assessments Taken (quiz_attempts)</div>
+      </div>
+      <div class="stat-card">
+        <div class="val" id="stat-responses">0</div>
+        <div class="label">Responses Recorded (quiz_responses)</div>
+      </div>
+      <div class="stat-card">
+        <div class="val" id="stat-tokens">0</div>
+        <div class="label">Active Sessions (auth_tokens)</div>
+      </div>
+    </div>
+
+    <!-- Table Navigation Tabs -->
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tab-users" onclick="switchTable('users')">
+        <span>users Table</span>
+        <span class="tab-count" id="count-users">0</span>
+      </button>
+      <button class="tab-btn" id="tab-attempts" onclick="switchTable('attempts')">
+        <span>quiz_attempts Table</span>
+        <span class="tab-count" id="count-attempts">0</span>
+      </button>
+      <button class="tab-btn" id="tab-responses" onclick="switchTable('responses')">
+        <span>quiz_responses Table</span>
+        <span class="tab-count" id="count-responses">0</span>
+      </button>
+      <button class="tab-btn" id="tab-tokens" onclick="switchTable('tokens')">
+        <span>auth_tokens Table</span>
+        <span class="tab-count" id="count-tokens">0</span>
+      </button>
+      <button class="tab-btn" id="tab-analytics" onclick="switchTable('analytics')">
+        <span>📈 Cohort Analytics</span>
+      </button>
+    </div>
+
+    <!-- Controls Bar -->
+    <div class="table-controls">
+      <input type="text" id="table-search" class="search-input" placeholder="Search records in active table..." oninput="filterCurrentTable()">
+      <span style="font-size: 0.85rem; color: var(--text-muted);" id="table-row-count">Showing 0 rows</span>
+    </div>
+
+    <!-- Table Container -->
+    <div class="table-container" id="table-wrapper">
+      <div class="empty-state">Loading records from SQLite database...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+let dbData = null;
+let currentTab = 'users';
+let adminToken = sessionStorage.getItem('quiz_admin_token') || null;
+
+async function initAdmin() {
+  if (adminToken) {
+    try {
+      const res = await fetch('/api/admin/verify', {
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+      });
+      if (res.ok) {
+        showDashboard();
+        await loadDatabaseData();
+        return;
+      }
+    } catch (e) {}
+    sessionStorage.removeItem('quiz_admin_token');
+    adminToken = null;
+  }
+  showLoginView();
+}
+
+function showLoginView() {
+  document.getElementById('admin-login-view').style.display = 'flex';
+  document.getElementById('admin-dashboard-view').style.display = 'none';
+  document.getElementById('admin-passkey-input').value = '';
+}
+
+function showDashboard() {
+  document.getElementById('admin-login-view').style.display = 'none';
+  document.getElementById('admin-dashboard-view').style.display = 'block';
+}
+
+async function handleAdminLogin(e) {
+  e.preventDefault();
+  const passkey = document.getElementById('admin-passkey-input').value;
+  const alertBox = document.getElementById('login-error-alert');
+  alertBox.style.display = 'none';
+
+  try {
+    const res = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ passkey })
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      alertBox.innerText = data.error || 'Authentication rejected.';
+      alertBox.style.display = 'block';
+      return;
+    }
+
+    adminToken = data.adminToken;
+    sessionStorage.setItem('quiz_admin_token', adminToken);
+    showDashboard();
+    await loadDatabaseData();
+  } catch (err) {
+    alertBox.innerText = 'Network error: Unable to contact authentication endpoint.';
+    alertBox.style.display = 'block';
+  }
+}
+
+async function handleAdminLogout() {
+  if (adminToken) {
+    try {
+      await fetch('/api/admin/logout', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+      });
+    } catch (e) {}
+  }
+  sessionStorage.removeItem('quiz_admin_token');
+  adminToken = null;
+  dbData = null;
+  showLoginView();
+}
+
+async function loadDatabaseData() {
+  if (!adminToken) return;
+
+  try {
+    const res = await fetch('/api/admin/database', {
+      headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+
+    if (res.status === 401 || res.status === 403) {
+      handleAdminLogout();
+      return;
+    }
+
+    dbData = await res.json();
+
+    document.getElementById('db-filepath').innerText = `Database File: ${dbData.dbFile}`;
+    document.getElementById('stat-users').innerText = dbData.stats.totalUsers;
+    document.getElementById('stat-attempts').innerText = dbData.stats.totalAttempts;
+    document.getElementById('stat-responses').innerText = dbData.stats.totalResponses;
+    document.getElementById('stat-tokens').innerText = dbData.stats.totalTokens;
+
+    document.getElementById('count-users').innerText = dbData.tables.users.length;
+    document.getElementById('count-attempts').innerText = dbData.tables.attempts.length;
+    document.getElementById('count-responses').innerText = dbData.tables.responses.length;
+    document.getElementById('count-tokens').innerText = dbData.tables.tokens.length;
+
+    renderActiveTable();
+  } catch (err) {
+    document.getElementById('table-wrapper').innerHTML = `
+      <div class="empty-state" style="color: var(--danger);">
+        Error loading database telemetry.
+      </div>
+    `;
+  }
+}
+
+function switchTable(tableName) {
+  currentTab = tableName;
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.getElementById(`tab-${tableName}`).classList.add('active');
+  
+  const controls = document.querySelector('.table-controls');
+  if (tableName === 'analytics') {
+    controls.style.display = 'none';
+  } else {
+    controls.style.display = 'flex';
+  }
+
+  document.getElementById('table-search').value = '';
+  renderActiveTable();
+}
+
+function filterCurrentTable() {
+  renderActiveTable();
+}
+
+function renderActiveTable() {
+  if (currentTab === 'analytics') {
+    renderAnalyticsDashboard();
+    return;
+  }
+
+  if (!dbData) return;
+
+  const wrapper = document.getElementById('table-wrapper');
+  const query = document.getElementById('table-search').value.toLowerCase().trim();
+  let rows = dbData.tables[currentTab] || [];
+
+  if (query) {
+    rows = rows.filter(r => JSON.stringify(r).toLowerCase().includes(query));
+  }
+
+  document.getElementById('table-row-count').innerText = `Showing ${rows.length} rows`;
+
+  if (rows.length === 0) {
+    wrapper.innerHTML = `<div class="empty-state">No records found matching query.</div>`;
+    return;
+  }
+
+  if (currentTab === 'users') {
+    wrapper.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Candidate Name</th>
+            <th>Email Address</th>
+            <th>Password Security Status</th>
+            <th>Key Storage</th>
+            <th>Registered At</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(u => `
+            <tr>
+              <td style="font-weight:700;">#${u.id}</td>
+              <td style="color:var(--text-bright); font-weight:600;">${escapeHtml(u.name)}</td>
+              <td>${escapeHtml(u.email)}</td>
+              <td><span class="badge badge-success">${escapeHtml(u.password_status)}</span></td>
+              <td class="code-cell">${escapeHtml(u.credentials_security)}</td>
+              <td>${new Date(u.created_at).toLocaleString()}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  } else if (currentTab === 'attempts') {
+    wrapper.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>Attempt ID</th>
+            <th>Candidate</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Score</th>
+            <th>Accuracy</th>
+            <th>Time Taken</th>
+            <th>Started At</th>
+            <th>Completed At</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(a => `
+            <tr>
+              <td style="font-weight:700;">#${a.id}</td>
+              <td style="color:var(--text-bright); font-weight:600;">${escapeHtml(a.candidate_name)}</td>
+              <td>${escapeHtml(a.candidate_email)}</td>
+              <td>
+                <span class="badge ${a.status === 'completed' ? 'badge-success' : 'badge-info'}">
+                  ${a.status}
+                </span>
+              </td>
+              <td style="font-weight:700; color:var(--text-bright);">${a.score} / ${a.total_questions}</td>
+              <td style="color:${a.percentage >= 70 ? 'var(--success)' : a.percentage >= 40 ? 'var(--warning)' : 'var(--danger)'}; font-weight:700;">
+                ${a.percentage}%
+              </td>
+              <td>${Math.floor(a.time_taken_seconds / 60)}m ${a.time_taken_seconds % 60}s</td>
+              <td>${new Date(a.started_at).toLocaleString()}</td>
+              <td>${a.completed_at ? new Date(a.completed_at).toLocaleString() : '—'}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  } else if (currentTab === 'responses') {
+    wrapper.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Attempt #</th>
+            <th>Candidate</th>
+            <th>Question #</th>
+            <th>Topic</th>
+            <th>Difficulty</th>
+            <th>Candidate Selected</th>
+            <th>Correct Answer</th>
+            <th>Result</th>
+            <th>Answered At</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(r => `
+            <tr>
+              <td>#${r.id}</td>
+              <td>#${r.attempt_id}</td>
+              <td style="color:var(--text-bright);">${escapeHtml(r.candidate_name)}</td>
+              <td style="font-weight:700;">Q#${r.question_id}</td>
+              <td>${escapeHtml(r.topic)}</td>
+              <td><span class="badge badge-info">${escapeHtml(r.difficulty)}</span></td>
+              <td class="code-cell">Option [${r.user_answer}]</td>
+              <td class="code-cell">Option [${r.correct_answer}]</td>
+              <td>
+                <span class="badge ${r.is_correct === 1 ? 'badge-success' : 'badge-danger'}">
+                  ${r.is_correct === 1 ? '✓ Correct' : '✗ Incorrect'}
+                </span>
+              </td>
+              <td>${new Date(r.answered_at).toLocaleTimeString()}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  } else if (currentTab === 'tokens') {
+    wrapper.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>Session Token Status</th>
+            <th>Candidate</th>
+            <th>Email</th>
+            <th>Session Created</th>
+            <th>Expires At</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(t => `
+            <tr>
+              <td class="code-cell" style="color:var(--warning);">${t.token}</td>
+              <td style="color:var(--text-bright);">${escapeHtml(t.name)}</td>
+              <td>${escapeHtml(t.email)}</td>
+              <td>${new Date(t.created_at).toLocaleString()}</td>
+              <td>${new Date(t.expires_at).toLocaleDateString()}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  }
+}
+
+async function renderAnalyticsDashboard() {
+  const wrapper = document.getElementById('table-wrapper');
+  wrapper.innerHTML = `<div class="empty-state">Loading comprehensive cohort analytics...</div>`;
+
+  try {
+    const res = await fetch('/api/admin/analytics', {
+      headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+    if (!res.ok) {
+      wrapper.innerHTML = `<div class="empty-state" style="color:var(--danger);">Failed to load cohort analytics.</div>`;
+      return;
+    }
+
+    const data = await res.json();
+    const { cohort, distribution, topicPerformance, difficultyPerformance, itemAnalysis } = data;
+
+    // Distribution percentages
+    const totalDist = cohort.completedAttempts || 1;
+    const p90 = Math.round(((distribution.band90to100 || 0) / totalDist) * 100);
+    const p70 = Math.round(((distribution.band70to89 || 0) / totalDist) * 100);
+    const p50 = Math.round(((distribution.band50to69 || 0) / totalDist) * 100);
+    const pUnder = Math.round(((distribution.bandUnder50 || 0) / totalDist) * 100);
+
+    // Topic Performance rows
+    let topicRows = '';
+    topicPerformance.forEach(t => {
+      const color = t.accuracy >= 70 ? 'var(--success)' : (t.accuracy >= 50 ? 'var(--warning)' : 'var(--danger)');
+      topicRows += `
+        <tr>
+          <td style="font-weight: 600; color: var(--text-bright);">${escapeHtml(t.topic)}</td>
+          <td>${t.total_answers}</td>
+          <td>${t.total_correct}</td>
+          <td style="width: 30%;">
+            <div style="background: rgba(255,255,255,0.08); border-radius: 6px; height: 8px; overflow: hidden;">
+              <div style="background: ${color}; width: ${t.accuracy}%; height: 100%;"></div>
+            </div>
+          </td>
+          <td style="font-weight: 700; color: ${color};">${t.accuracy}%</td>
+        </tr>
+      `;
+    });
+
+    // Difficulty rows
+    let diffRows = '';
+    difficultyPerformance.forEach(d => {
+      const color = d.accuracy >= 70 ? 'var(--success)' : (d.accuracy >= 50 ? 'var(--warning)' : 'var(--danger)');
+      diffRows += `
+        <tr>
+          <td style="font-weight: 700; color: var(--text-bright);">${escapeHtml(d.difficulty)}</td>
+          <td>${d.total_answers}</td>
+          <td>${d.total_correct}</td>
+          <td style="font-weight: 700; color: ${color};">${d.accuracy}%</td>
+        </tr>
+      `;
+    });
+
+    // Hardest Questions rows
+    let hardestRows = '';
+    if (itemAnalysis.hardestQuestions && itemAnalysis.hardestQuestions.length > 0) {
+      hardestRows = itemAnalysis.hardestQuestions.map(q => `
+        <tr>
+          <td style="font-weight: 700; color: var(--danger);">Q#${q.question_id}</td>
+          <td>${escapeHtml(q.topic)}</td>
+          <td><span class="badge badge-info">${escapeHtml(q.difficulty)}</span></td>
+          <td>${q.attempts}</td>
+          <td style="font-weight: 700; color: var(--danger);">${q.fail_rate}%</td>
+        </tr>
+      `).join('');
+    } else {
+      hardestRows = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No response attempts recorded yet.</td></tr>`;
+    }
+
+    // Easiest Questions rows
+    let easiestRows = '';
+    if (itemAnalysis.easiestQuestions && itemAnalysis.easiestQuestions.length > 0) {
+      easiestRows = itemAnalysis.easiestQuestions.map(q => `
+        <tr>
+          <td style="font-weight: 700; color: var(--success);">Q#${q.question_id}</td>
+          <td>${escapeHtml(q.topic)}</td>
+          <td><span class="badge badge-info">${escapeHtml(q.difficulty)}</span></td>
+          <td>${q.attempts}</td>
+          <td style="font-weight: 700; color: var(--success);">${q.pass_rate}%</td>
+        </tr>
+      `).join('');
+    } else {
+      easiestRows = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No response attempts recorded yet.</td></tr>`;
+    }
+
+    wrapper.innerHTML = `
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <!-- Executive KPI Cards -->
+        <div class="stats-row" style="margin-bottom: 0;">
+          <div class="stat-card" style="border-top: 3px solid var(--accent);">
+            <div class="val" style="color: var(--accent);">${cohort.passRate}%</div>
+            <div class="label">Cohort Pass Rate (${cohort.passedCount}/${cohort.completedAttempts} passed)</div>
+          </div>
+          <div class="stat-card" style="border-top: 3px solid var(--success);">
+            <div class="val" style="color: var(--success);">${cohort.avgScore} <span style="font-size:1.1rem; color:var(--text-muted);">/ 100</span></div>
+            <div class="label">Average Score (${cohort.avgPercentage}%)</div>
+          </div>
+          <div class="stat-card" style="border-top: 3px solid var(--warning);">
+            <div class="val" style="color: var(--warning);">${cohort.minScore} — ${cohort.maxScore}</div>
+            <div class="label">Score Spread (Min — Max)</div>
+          </div>
+          <div class="stat-card" style="border-top: 3px solid #a371f7;">
+            <div class="val" style="color: #a371f7;">${Math.floor(cohort.avgDurationSeconds / 60)}m ${cohort.avgDurationSeconds % 60}s</div>
+            <div class="label">Avg Duration / Attempt</div>
+          </div>
+        </div>
+
+        <!-- Performance Distribution Bands & Difficulty Matrix -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px;">
+          <!-- Score Distribution Bands -->
+          <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px;">
+            <h3 style="font-size: 1.05rem; color: var(--text-bright); margin-bottom: 16px;">
+              📊 Assessment Score Distribution
+            </h3>
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px;">
+                  <span>Distinction (90% - 100%)</span>
+                  <span style="font-weight: 700; color: var(--success);">${distribution.band90to100} attempts (${p90}%)</span>
+                </div>
+                <div style="background: var(--panel-bg); height: 8px; border-radius: 4px; overflow: hidden;">
+                  <div style="background: var(--success); width: ${p90}%; height: 100%;"></div>
+                </div>
+              </div>
+
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px;">
+                  <span>Proficient (70% - 89%)</span>
+                  <span style="font-weight: 700; color: var(--accent);">${distribution.band70to89} attempts (${p70}%)</span>
+                </div>
+                <div style="background: var(--panel-bg); height: 8px; border-radius: 4px; overflow: hidden;">
+                  <div style="background: var(--accent); width: ${p70}%; height: 100%;"></div>
+                </div>
+              </div>
+
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px;">
+                  <span>Needs Improvement (50% - 69%)</span>
+                  <span style="font-weight: 700; color: var(--warning);">${distribution.band50to69} attempts (${p50}%)</span>
+                </div>
+                <div style="background: var(--panel-bg); height: 8px; border-radius: 4px; overflow: hidden;">
+                  <div style="background: var(--warning); width: ${p50}%; height: 100%;"></div>
+                </div>
+              </div>
+
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px;">
+                  <span>At Risk (&lt; 50%)</span>
+                  <span style="font-weight: 700; color: var(--danger);">${distribution.bandUnder50} attempts (${pUnder}%)</span>
+                </div>
+                <div style="background: var(--panel-bg); height: 8px; border-radius: 4px; overflow: hidden;">
+                  <div style="background: var(--danger); width: ${pUnder}%; height: 100%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Difficulty Level Breakdown -->
+          <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px;">
+            <h3 style="font-size: 1.05rem; color: var(--text-bright); margin-bottom: 16px;">
+              🎯 Cohort Accuracy by Difficulty Level
+            </h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Difficulty</th>
+                  <th>Total Answers</th>
+                  <th>Correct</th>
+                  <th>Accuracy</th>
+                </tr>
+              </thead>
+              <tbody>${diffRows || '<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No responses recorded.</td></tr>'}</tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Topic Mastery Benchmarks -->
+        <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px;">
+          <h3 style="font-size: 1.05rem; color: var(--text-bright); margin-bottom: 16px;">
+            📚 Cohort Topic Competency Benchmarking
+          </h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Knowledge Domain</th>
+                <th>Total Answered</th>
+                <th>Total Correct</th>
+                <th>Performance Bar</th>
+                <th>Cohort Accuracy</th>
+              </tr>
+            </thead>
+            <tbody>${topicRows || '<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No topic data yet.</td></tr>'}</tbody>
+          </table>
+        </div>
+
+        <!-- Question Item Analysis -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px;">
+          <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px;">
+            <h3 style="font-size: 1.05rem; color: var(--danger); margin-bottom: 14px;">
+              🔥 Top Hardest Questions (Highest Fail Rate)
+            </h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Question</th>
+                  <th>Topic</th>
+                  <th>Level</th>
+                  <th>Attempts</th>
+                  <th>Fail Rate</th>
+                </tr>
+              </thead>
+              <tbody>${hardestRows}</tbody>
+            </table>
+          </div>
+
+          <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px;">
+            <h3 style="font-size: 1.05rem; color: var(--success); margin-bottom: 14px;">
+              ✨ Top Easiest Questions (Highest Pass Rate)
+            </h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Question</th>
+                  <th>Topic</th>
+                  <th>Level</th>
+                  <th>Attempts</th>
+                  <th>Pass Rate</th>
+                </tr>
+              </thead>
+              <tbody>${easiestRows}</tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    wrapper.innerHTML = `<div class="empty-state" style="color: var(--danger);">Network error while loading analytics.</div>`;
+  }
+}
+
+function exportDataJson() {
+  if (!dbData) return;
+  const blob = new Blob([JSON.stringify(dbData, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `quiz_secure_export_${Date.now()}.json`;
+  a.click();
+}
+
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+window.onload = initAdmin;
+</script>
+</body>
+</html>

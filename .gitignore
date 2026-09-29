@@ -1,0 +1,7 @@
+node_modules/
+.env
+quiz.db-shm
+quiz.db-wal
+.vercel
+.DS_Store
+Thumbs.db
