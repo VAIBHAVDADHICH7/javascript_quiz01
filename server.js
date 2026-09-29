@@ -101,9 +101,27 @@ db.exec(`
   );
 `);
 
+function getFilePath(filename) {
+  const p1 = path.join(__dirname, filename);
+  if (fs.existsSync(p1)) return p1;
+  const p2 = path.join(process.cwd(), filename);
+  if (fs.existsSync(p2)) return p2;
+  return p1;
+}
+
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
+app.use(express.static(process.cwd()));
+
+// Explicit Root Routes for Candidate Portal
+app.get('/', (req, res) => {
+  res.sendFile(getFilePath('index.html'));
+});
+
+app.get('/index.html', (req, res) => {
+  res.sendFile(getFilePath('index.html'));
+});
 
 // Password Hashing Utilities
 function hashPassword(password) {
@@ -676,7 +694,11 @@ function requireAdminAuth(req, res, next) {
 
 // Admin Portal Static Route
 app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin.html'));
+  res.sendFile(getFilePath('admin.html'));
+});
+
+app.get('/admin.html', (req, res) => {
+  res.sendFile(getFilePath('admin.html'));
 });
 
 // Admin Passkey Login Endpoint
